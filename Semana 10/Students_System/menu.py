@@ -19,10 +19,10 @@ def user_option():
 def ask_student_information():
     name = input('Add your Full Name: ')
     group = input('Group: ')
-    spanish_grade = input('Spanish Grade:')
-    english_grade = input('English Grade: ')
-    social_grade = input('Social Studies Grade: ')
-    science_grade = input('Science Grade: ')
+    spanish_grade = int(input('Spanish Grade:'))
+    english_grade = int(input('English Grade: '))
+    social_grade = int(input('Social Studies Grade: '))
+    science_grade = int(input('Science Grade: '))
     return {"name": name, "group": group, "spanish_grade": spanish_grade, "english_grade": english_grade, "social_grade": social_grade, "science_grade": science_grade}
 
 def add_another_student():
