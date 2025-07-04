@@ -1,4 +1,5 @@
 import os
+from menu import students_format
 
 
 students = []
@@ -13,4 +14,11 @@ def add_students(student):
 def get_students_list():
     return students
 
+def read_Students_list():
+    for student in get_students_list():
+             students_format(student)
 
+
+         
+
+        
