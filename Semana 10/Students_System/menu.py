@@ -13,7 +13,10 @@ def menu():
     print("╚══════════════════════════════════════╝")
 
 def user_option():
-    return int(input('Input: '))
+    try:
+        return int(input('Input: '))
+    except ValueError:
+        raise ValueError('Input not allowed')
 
 
 def ask_student_information():
@@ -40,3 +43,6 @@ def students_format(aux):
 
 def back_option():
     return input('Would you like to come back to the Menu: [Yes] or [No] ').strip().lower()
+
+def invalid_nof():
+    print('Invalid Option')

@@ -55,7 +55,7 @@ class StudentManager:
 
         return average_list
     
-    def sort_my_average_list(self, my_list):  # ✅ CORRECTO
+    def sort_my_average_list(self, my_list):
         n = len(my_list)
         for i in range(n):
             for j in range(0, n - i - 1):
@@ -64,5 +64,24 @@ class StudentManager:
         return my_list
 
     def read_average_list(self, average_list):
+        cont = 0
         for student in average_list:
             print(f"{student['name']}: {student['average_grade']}")
+            cont = cont + 1
+            if cont == 3:
+                break
+
+    def total_average(self):
+        av = 0
+        total_av = 0
+        final_result = 0
+        total = 0
+        for student in self.grades_average():
+            av = student['average_grade']
+            total_av += av
+        final_result = len(self.grades_average())
+        total = total_av / final_result 
+        print(f' Promedio Total: {total}')
+
+        
+
