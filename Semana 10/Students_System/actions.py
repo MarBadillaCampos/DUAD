@@ -64,12 +64,19 @@ class StudentManager:
         return my_list
 
     def read_average_list(self, average_list):
-        cont = 0
-        for student in average_list:
-            print(f"{student['name']}: {student['average_grade']}")
-            cont = cont + 1
-            if cont == 3:
-                break
+        print('=========  Top 3 Student Average Grades  =========\n')
+
+        for idx, student in enumerate(average_list[:3], start=1):
+            name = student['name'].capitalize()
+            group = student['group']
+            avg = round(student['average_grade'], 2)
+
+            print(f"#{idx} Name   : {name}")
+            print(f"   Group  : {group}")
+            print(f"   Average: {avg:.2f}\n")
+
+            if idx < 3:
+                print('-' * 42)
 
     def total_average(self):
         av = 0
