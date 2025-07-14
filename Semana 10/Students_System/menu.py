@@ -1,4 +1,4 @@
-
+import re
 
 def menu():
     print("╔══════════════════════════════════════╗")
@@ -19,24 +19,44 @@ def user_option():
 def get_valid_grade(subject,manager):
         while True:
             try:
-                grade = int(input(f'{subject} Grade: '))
-                return grade
+                grade = int(input(f'{subject} Grade: [0-100]: '))
+                if 0 <= grade <= 100:
+                    return grade
+                else:
+                    manager.clear_console()
+                    print(f'Grade must be between 0 and 100. Please try again')
+                    
             except ValueError:
                 manager.clear_console()
-                print("Invalid input. Please enter a numeric value.")
+                print("Invalid input. Please enter a numeric value. Please try again")
+
+def get_valid_group(manager):
+     while True:
+          try:
+               group = input('Group: ').strip()
+               if re.fullmatch(r'[A-Za-z0-9]+', group):
+                return group
+               else:
+                manager.clear_console()
+                print('Only letters and numbers are allowed, Please try again')
+
+          except ValueError:
+             manager.clear_console()
+             print("Invalid input")
 
 def ask_student_information(manager):
     while True:
         try:
             name = input('Add your Full Name: ')
             if not name.replace(" ", "").isalpha():
-                raise ValueError('Name must contain letters only.')
+                raise ValueError('Name must contain letters only. Please, try again!')
             break
+
         except ValueError as e:
             manager.clear_console()
             print(f"Invalid input: {e}")
 
-    group = input('Group: ')
+    group = get_valid_group(manager)
 
     spanish_grade = get_valid_grade('Spanish',manager)
     english_grade = get_valid_grade('English',manager)
@@ -52,10 +72,18 @@ def ask_student_information(manager):
         "science_grade": science_grade
     }
 
+def add_another_student(manager):
+    while True:
+        try: 
+            other_student= input('Would you like to add another Student: [Yes] or [No] ').strip().lower()
 
-
-def add_another_student():
-    return input('Would you like to add another Student: [Yes] or [No] ').strip().lower()
+            if other_student in ('yes', 'no'):
+                return other_student
+            else:
+                raise ValueError ('Input must be [yes] or [no]')
+        except ValueError as e:
+            manager.clear_console()
+            print(f'{e}')
 
 def students_format(aux):
     print("===================================")
@@ -68,15 +96,17 @@ def students_format(aux):
     print("===================================\n")
 
 def back_option(manager):
-    try:
-         op = input('Would you like to come back to the Menu: [Yes] or [No] ').strip().lower()
-         if not op.replace(" ","").isalpha():
-              raise ValueError('Option must contain letter only')
-         return op
-    except ValueError as e:
-         manager.clear_console()
-         print(f'Input {e}')
-         return None
+    while True:
+        try: 
+            op = input('Would you like to come back to the Menu: [Yes] or [No] ').strip().lower()
+
+            if op in ('yes', 'no'):
+                return op
+            else:
+                raise ValueError ('Input must be [yes] or [no]')
+        except ValueError as e:
+            manager.clear_console()
+            print(f'{e}')
 
 def invalid_nof():
     print('Invalid Option')

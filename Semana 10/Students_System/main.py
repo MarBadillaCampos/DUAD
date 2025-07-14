@@ -15,7 +15,6 @@ def main():
                         new_student = ask_student_information(manager)
                         manager.add_student(new_student)
                         manager.clear_console()
-
                         while True:
                             other_student = add_another_student()
                             if other_student == 'yes':
@@ -29,14 +28,28 @@ def main():
                                 invalid_nof()
                     case 2:
                         manager.clear_console()
-                        list_tittle()
-                        manager.read_students_list()
-                        bk_opt = back_option(manager)
+                        my_list = manager.get_students_list()
+                        if not my_list:
+                            print('=========== Empty List ===========')
+                            bk_opt = back_option(manager)
 
-                        if bk_opt == 'yes':
-                            continue
-                        elif bk_opt == 'no':
-                            break
+                            if bk_opt == 'yes':
+                                continue
+                            elif bk_opt == 'no':
+                                break
+                            else:
+                                invalid_nof() 
+                        else:
+                            list_tittle()
+                            manager.read_students_list()
+                            bk_opt = back_option(manager)
+
+                            if bk_opt == 'yes':
+                                continue
+                            elif bk_opt == 'no':
+                                break
+                            else:
+                                invalid_nof() 
                     case 3:
                         manager.clear_console()
                         average_list = manager.grades_average()
@@ -50,15 +63,24 @@ def main():
                             continue
                         elif bk_opt == 'no':
                             break
-
+                        else:
+                            invalid_nof()
                     case 4:
                         manager.clear_console()
                         manager.total_average()
-
-                    case 5:
+                        manager.read_total_average()
                         manager.clear_console()
-                        manager.export_data()
+                    case 5:
+                        records_list = manager.grades_average()
+                        file_path = 'students.csv'
+                        manager.clear_console()
 
+                        if records_list:
+                            headers = records_list[0].keys()
+                            manager.create_csv(file_path, headers)
+                            manager.write_csv_file(file_path, headers, records_list)
+                        else:
+                            print("No hay datos para exportar.")
                     case 6:
                         manager.clear_console()
                         manager.import_data()
@@ -82,6 +104,13 @@ def main():
         except ValueError:
             manager.clear_console()
             print("Invalid input. Please enter a valid number.")
+            bk_opt = back_option(manager)
+            if bk_opt == 'yes':
+                continue
+            elif bk_opt == 'no':
+                break
+            else:
+                invalid_nof()
 
 if __name__ == '__main__':
     main()

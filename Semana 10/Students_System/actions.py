@@ -1,4 +1,4 @@
-import os
+import os, csv
 from menu import students_format
 
 class StudentManager:
@@ -88,7 +88,37 @@ class StudentManager:
             total_av += av
         final_result = len(self.grades_average())
         total = total_av / final_result 
-        print(f' Promedio Total: {total}')
+        return total
+    
+    def read_total_average(self):
+        avg = round(self.total_average(), 2)
+        print('========= Overall Student Performance =========\n')
+        print(f' Total Average Grade: {avg:.2f}')
+    
+    def validate_export_data(self,file_path):
+        return os.path.exists(file_path)
+    
+    def create_csv(self,file_path,headers):
+        if not self.validate_export_data(file_path):
+            with open(file_path, 'w', newline='',encoding='utf-8') as file:
+                 writer = csv.DictWriter(file, headers)
+                 writer.writeheader()
+        else:
+            print('Archivo existente')
+
+    def write_csv_file(self,file_path,headers,data):
+        with open(file_path,'w',newline='', encoding='utf-8') as file:
+            writer = csv.DictWriter(file, headers)
+            writer.writeheader()
+            writer.writerows(data)
+
+    def read_csv_file(self, file_path):
+        with open(file_path,'r') as file:
+            reader = csv.DictReader(file)
+            for row in reader:
+                print(row)
+
+
 
         
 
