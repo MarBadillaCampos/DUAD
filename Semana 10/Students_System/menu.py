@@ -1,22 +1,27 @@
 import re
 
-def menu():
-    print("╔══════════════════════════════════════╗")
-    print("║         STUDENT MANAGEMENT SYSTEM    ║")
-    print("╠══════════════════════════════════════╣")
-    print("║  1.  Add Students                    ║")
-    print("║  2.  View all students               ║")
-    print("║  3.  View top 3 by average grade     ║")
-    print("║  4.  view overall average grade      ║")
-    print("║  5.  Export data                     ║")
-    print("║  6.  Import data                     ║")
-    print("║  7.  Exit                            ║")
-    print("╚══════════════════════════════════════╝")
+class MenuHandler:
 
-def user_option():
+    def __init__(self):
+        pass
+
+    def menu(self):
+        print("╔══════════════════════════════════════╗")
+        print("║         STUDENT MANAGEMENT SYSTEM    ║")
+        print("╠══════════════════════════════════════╣")
+        print("║  1.  Add Students                    ║")
+        print("║  2.  View all students               ║")
+        print("║  3.  View top 3 by average grade     ║")
+        print("║  4.  view overall average grade      ║")
+        print("║  5.  Export data                     ║")
+        print("║  6.  Import data                     ║")
+        print("║  7.  Exit                            ║")
+        print("╚══════════════════════════════════════╝")
+
+    def user_option(self):
         return int(input('Input: '))
 
-def get_valid_grade(subject,manager):
+    def get_valid_grade(self,subject,manager):
         while True:
             try:
                 grade = int(input(f'{subject} Grade: [0-100]: '))
@@ -30,7 +35,7 @@ def get_valid_grade(subject,manager):
                 manager.clear_console()
                 print("Invalid input. Please enter a numeric value. Please try again")
 
-def get_valid_group(manager):
+    def get_valid_group(self, manager):
      while True:
           try:
                group = input('Group: ').strip()
@@ -44,26 +49,26 @@ def get_valid_group(manager):
              manager.clear_console()
              print("Invalid input")
 
-def ask_student_information(manager):
-    while True:
-        try:
-            name = input('Add your Full Name: ')
-            if not name.replace(" ", "").isalpha():
-                raise ValueError('Name must contain letters only. Please, try again!')
-            break
+    def ask_student_information(self, manager):
+        while True:
+            try:
+                name = input('Add your Full Name: ')
+                if not name.replace(" ", "").isalpha():
+                    raise ValueError('Name must contain letters only. Please, try again!')
+                break
 
-        except ValueError as e:
-            manager.clear_console()
-            print(f"Invalid input: {e}")
+            except ValueError as e:
+                manager.clear_console()
+                print(f"Invalid input: {e}")
 
-    group = get_valid_group(manager)
+        group = self.get_valid_group(manager)
 
-    spanish_grade = get_valid_grade('Spanish',manager)
-    english_grade = get_valid_grade('English',manager)
-    social_grade = get_valid_grade('Social Studies',manager)
-    science_grade = get_valid_grade('Science',manager)
+        spanish_grade = self.get_valid_grade('Spanish',manager)
+        english_grade = self.get_valid_grade('English',manager)
+        social_grade = self.get_valid_grade('Social Studies',manager)
+        science_grade = self.get_valid_grade('Science',manager)
 
-    return {
+        return {
         "name": name,
         "group": group,
         "spanish_grade": spanish_grade,
@@ -72,48 +77,47 @@ def ask_student_information(manager):
         "science_grade": science_grade
     }
 
-def add_another_student(manager):
-    while True:
-        try: 
-            other_student= input('Would you like to add another Student: [Yes] or [No] ').strip().lower()
+    def add_another_student(self,manager):
+        while True:
+            try: 
+                other_student= input('Would you like to add another Student: [Yes] or [No] ').strip().lower()
 
-            if other_student in ('yes', 'no'):
-                return other_student
-            else:
-                raise ValueError ('Input must be [yes] or [no]')
-        except ValueError as e:
-            manager.clear_console()
+                if other_student in ('yes', 'no'):
+                    return other_student
+                else:
+                    raise ValueError ('Input must be [yes] or [no]')
+            except ValueError as e:
+                manager.clear_console()
+                print(f'{e}')
+
+    def students_format(self,aux):
+        print("===================================")
+        print(f" Full Name:       {aux['name']}")
+        print(f" Group:           {aux['group']}")
+        print(f" Spanish:         {aux['spanish_grade']}")
+        print(f" English:         {aux['english_grade']}")
+        print(f" Social Studies : {aux['social_grade']}")
+        print(f" Science :        {aux['science_grade']}")
+        print("===================================\n")
+
+    def back_option(self,manager):
+        while True:
+            try: 
+                op = input('Would you like to come back to the Menu: [Yes] or [No] ').strip().lower()
+
+                if op in ('yes', 'no'):
+                    return op
+                else:
+                    raise ValueError ('Input must be [yes] or [no]')
+            except ValueError as e:
+                manager.clear_console()
             print(f'{e}')
 
-def students_format(aux):
-    print("===================================")
-    print(f" Full Name:       {aux['name']}")
-    print(f" Group:           {aux['group']}")
-    print(f" Spanish:         {aux['spanish_grade']}")
-    print(f" English:         {aux['english_grade']}")
-    print(f" Social Studies : {aux['social_grade']}")
-    print(f" Science :        {aux['science_grade']}")
-    print("===================================\n")
+    def invalid_nof(self):
+        print('Invalid Option')
 
-def back_option(manager):
-    while True:
-        try: 
-            op = input('Would you like to come back to the Menu: [Yes] or [No] ').strip().lower()
-
-            if op in ('yes', 'no'):
-                return op
-            else:
-                raise ValueError ('Input must be [yes] or [no]')
-        except ValueError as e:
-            manager.clear_console()
-            print(f'{e}')
-
-def invalid_nof():
-    print('Invalid Option')
-
-def list_tittle():
-    print('============ Student List ==========')
+    def list_tittle(self):
+        print('====================================')
+        print('============ Student List ==========')
 
 
-def av_gd_tittle():
-    print('============ Student List ==========')

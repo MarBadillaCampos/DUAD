@@ -1,5 +1,5 @@
 import os, csv
-from menu import students_format
+
 
 class StudentManager:
     def __init__(self):
@@ -14,12 +14,9 @@ class StudentManager:
     def get_students_list(self):
         return self.students
 
-    def read_students_list(self):
+    def read_students_list(self,menu_handler):
         for student in self.students:
-            students_format(student)
-
-    def validate_input(self, opt):
-        return 0 <= opt <= 100
+            menu_handler.students_format(student)
 
     def get_spanish_grade(self, student):
         return student['spanish_grade']
@@ -41,7 +38,7 @@ class StudentManager:
             soc_grade = self.get_social_grade(student)
             sc_grade = self.get_science_grade(student)
 
-            average_grade = (sp_grade + en_grade + soc_grade + sc_grade) / 4
+            average_grade = int((sp_grade + en_grade + soc_grade + sc_grade) / 4)
 
             average_list.append({
                 "name": student['name'],
@@ -76,7 +73,7 @@ class StudentManager:
             print(f"   Average: {avg:.2f}\n")
 
             if idx < 3:
-                print('-' * 42)
+                print('=' * 42)
 
     def total_average(self):
         av = 0
@@ -94,29 +91,6 @@ class StudentManager:
         avg = round(self.total_average(), 2)
         print('========= Overall Student Performance =========\n')
         print(f' Total Average Grade: {avg:.2f}')
-    
-    def validate_export_data(self,file_path):
-        return os.path.exists(file_path)
-    
-    def create_csv(self,file_path,headers):
-        if not self.validate_export_data(file_path):
-            with open(file_path, 'w', newline='',encoding='utf-8') as file:
-                 writer = csv.DictWriter(file, headers)
-                 writer.writeheader()
-        else:
-            print('Archivo existente')
-
-    def write_csv_file(self,file_path,headers,data):
-        with open(file_path,'w',newline='', encoding='utf-8') as file:
-            writer = csv.DictWriter(file, headers)
-            writer.writeheader()
-            writer.writerows(data)
-
-    def read_csv_file(self, file_path):
-        with open(file_path,'r') as file:
-            reader = csv.DictReader(file)
-            for row in reader:
-                print(row)
 
 
 
