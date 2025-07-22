@@ -111,7 +111,7 @@ class MenuHandler:
                     raise ValueError ('Input must be [yes] or [no]')
             except ValueError as e:
                 manager.clear_console()
-            print(f'{e}')
+                print(f'{e}')
 
     def invalid_nof(self):
         print('Invalid Option')

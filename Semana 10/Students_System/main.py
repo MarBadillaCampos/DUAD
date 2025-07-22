@@ -70,8 +70,9 @@ def main():
                             menu_handler.invalid_nof()
                     case 4:
                         manager.clear_console()
-                        manager.total_average()
-                        manager.read_total_average()
+                        average = manager.total_average()
+                        if average is not None:
+                            manager.read_total_average()
                         bk_opt = menu_handler.back_option(manager)
                         manager.clear_console()
                         if bk_opt == 'yes':
@@ -97,24 +98,32 @@ def main():
                                 break
                             else:
                                 menu_handler.invalid_nof()
-                        else:
-                            print("No hay datos para exportar.")
                     case 6:
                         manager.clear_console()
                         file_path = 'students.csv'
                         aux_list = exp_handler.read_csv_file_import(file_path)
-                        delete_list = exp_handler.delete_item_from_list(aux_list)
-                        for row in delete_list:
-                            manager.add_student(row)
-                        print("Information Imported")
-                        bk_opt = menu_handler.back_option(manager)
-                        manager.clear_console()
-                        if bk_opt == 'yes':
-                            continue
-                        elif bk_opt == 'no':
-                            break
+                        if aux_list:
+                            delete_list = exp_handler.delete_item_from_list(aux_list)
+                            for row in delete_list:
+                                manager.add_student(row)
+                            print("Import Completed")
+                            bk_opt = menu_handler.back_option(manager)
+                            manager.clear_console()
+                            if bk_opt == 'yes':
+                                continue
+                            elif bk_opt == 'no':
+                                break
+                            else:
+                                menu_handler.invalid_nof()
                         else:
-                            menu_handler.invalid_nof()
+                           bk_opt = menu_handler.back_option(manager)
+                           manager.clear_console()
+                           if bk_opt == 'yes':
+                                continue
+                           elif bk_opt == 'no':
+                                break
+                           else:
+                                menu_handler.invalid_nof()
                     case 7:
                         print("Exit...")
                         break

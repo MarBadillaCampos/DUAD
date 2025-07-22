@@ -80,12 +80,17 @@ class StudentManager:
         total_av = 0
         final_result = 0
         total = 0
-        for student in self.grades_average():
-            av = student['average_grade']
-            total_av += av
-        final_result = len(self.grades_average())
-        total = total_av / final_result 
-        return total
+        try: 
+            for student in self.grades_average():
+                av = student['average_grade']
+                total_av += av
+            final_result = len(self.grades_average())
+            total = total_av / final_result 
+            return total
+        except ZeroDivisionError as e:
+            print(f'Error {e}')
+            return None
+            
     
     def read_total_average(self):
         avg = round(self.total_average(), 2)
