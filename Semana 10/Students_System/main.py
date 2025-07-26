@@ -26,6 +26,7 @@ def main():
                                 manager.add_student(aux_student)
                                 manager.clear_console()
                             elif other_student == 'no':
+                                manager.clear_console()
                                 break
                             else:
                                 menu_handler.invalid_nof()
@@ -35,69 +36,119 @@ def main():
                         if not my_list:
                             print('=========== Empty List ===========')
                             bk_opt = menu_handler.back_option(manager)
-
                             if bk_opt == 'yes':
+                                manager.clear_console()
                                 continue
                             elif bk_opt == 'no':
+                                manager.clear_console()
                                 break
                             else:
-                                menu_handler.invalid_nof() 
+                                menu_handler.invalid_nof()
                         else:
                             menu_handler.list_tittle()
                             manager.read_students_list(menu_handler)
                             bk_opt = menu_handler.back_option(manager)
                             manager.clear_console()
                             if bk_opt == 'yes':
+                                manager.clear_console()
                                 continue
                             elif bk_opt == 'no':
+                                manager.clear_console()
                                 break
                             else:
                                 menu_handler.invalid_nof() 
                     case 3:
                         manager.clear_console()
-                        average_list = manager.grades_average()
-                        menu_handler.list_tittle()
-                        my_sorted_list = manager.sort_my_average_list(average_list)
-                        manager.clear_console()
-                        manager.read_average_list(my_sorted_list)
-                        bk_opt = menu_handler.back_option(manager)
-                        manager.clear_console()
-                        if bk_opt == 'yes':
-                            continue
-                        elif bk_opt == 'no':
-                            break
-                        else:
-                            menu_handler.invalid_nof()
-                    case 4:
-                        manager.clear_console()
-                        average = manager.total_average()
-                        if average is not None:
-                            manager.read_total_average()
-                        bk_opt = menu_handler.back_option(manager)
-                        manager.clear_console()
-                        if bk_opt == 'yes':
-                            continue
-                        elif bk_opt == 'no':
-                            break
-                        else:
-                            menu_handler.invalid_nof()
-                    case 5:
-                        records_list = manager.grades_average()
-                        file_path = 'students.csv'
-                        manager.clear_console()
+                        my_list = manager.get_students_list()
+                        if not my_list:
+                            print('=========== Empty Average ===========')
+                            bk_opt = menu_handler.back_option(manager)
 
-                        if records_list:
-                            headers = records_list[0].keys()
-                            exp_handler.create_csv(file_path,headers)
-                            exp_handler.write_csv_file(file_path,headers, records_list)
+                            if bk_opt == 'yes':
+                                manager.clear_console()
+                                continue
+                            elif bk_opt == 'no':
+                                manager.clear_console()
+                                break
+                            else:
+                                menu_handler.invalid_nof() 
+                        else: 
+                            average_list = manager.grades_average()
+                            menu_handler.list_tittle()
+                            my_sorted_list = manager.sort_my_average_list(average_list)
+                            manager.clear_console()
+                            manager.read_average_list(my_sorted_list)
                             bk_opt = menu_handler.back_option(manager)
                             manager.clear_console()
                             if bk_opt == 'yes':
+                                manager.clear_console()
                                 continue
                             elif bk_opt == 'no':
+                                manager.clear_console()
                                 break
                             else:
                                 menu_handler.invalid_nof()
+                    case 4:
+                        manager.clear_console()
+                        my_list = manager.get_students_list()
+                        if not my_list:
+                            print('=========== Empty Global Average ===========')
+                            bk_opt = menu_handler.back_option(manager)
+
+                            if bk_opt == 'yes':
+                                manager.clear_console()
+                                continue
+                            elif bk_opt == 'no':
+                                manager.clear_console()
+                                break
+                            else:
+                                menu_handler.invalid_nof() 
+                        else: 
+                            average = manager.total_average()
+                            if average is not None:
+                                manager.read_total_average()
+                            bk_opt = menu_handler.back_option(manager)
+                            manager.clear_console()
+                            if bk_opt == 'yes':
+                                manager.clear_console()
+                                continue
+                            elif bk_opt == 'no':
+                                manager.clear_console()
+                                break
+                            else:
+                                menu_handler.invalid_nof()
+                    case 5:
+                        records_list = manager.grades_average()
+
+                        if not records_list:
+                            print('Empty List')
+                            bk_opt = menu_handler.back_option(manager)
+
+                            if bk_opt == 'yes':
+                                manager.clear_console()
+                                continue
+                            elif bk_opt == 'no':
+                                manager.clear_console()
+                                break
+                            else:
+                                menu_handler.invalid_nof() 
+                        else: 
+                            file_path = 'students.csv'
+                            manager.clear_console()
+
+                            if records_list:
+                                headers = records_list[0].keys()
+                                exp_handler.create_csv(file_path,headers)
+                                exp_handler.write_csv_file(file_path,headers, records_list)
+                                bk_opt = menu_handler.back_option(manager)
+                                manager.clear_console()
+                                if bk_opt == 'yes':
+                                    continue
+                                elif bk_opt == 'no':
+                                    manager.clear_console()    
+                                    break
+                                else:
+                                    menu_handler.invalid_nof()
                     case 6:
                         manager.clear_console()
                         file_path = 'students.csv'
@@ -110,8 +161,10 @@ def main():
                             bk_opt = menu_handler.back_option(manager)
                             manager.clear_console()
                             if bk_opt == 'yes':
+                                manager.clear_console()
                                 continue
                             elif bk_opt == 'no':
+                                manager.clear_console()
                                 break
                             else:
                                 menu_handler.invalid_nof()
@@ -119,8 +172,10 @@ def main():
                            bk_opt = menu_handler.back_option(manager)
                            manager.clear_console()
                            if bk_opt == 'yes':
+                                manager.clear_console()
                                 continue
                            elif bk_opt == 'no':
+                                manager.clear_console()
                                 break
                            else:
                                 menu_handler.invalid_nof()
