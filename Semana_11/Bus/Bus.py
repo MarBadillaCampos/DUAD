@@ -1,5 +1,7 @@
 import os
-import Person
+class Person:
+    def __init__(self, name):
+        self.name = name
 
 class Bus:
     def __init__(self, max_passengers):
@@ -65,7 +67,6 @@ class Main:
         pass
 
     def show_passengers(self, bus):
-        """Muestra la lista de pasajeros."""
         if bus.get_list_len() == 0:
             print("\nNo passengers on board.")
             return False
@@ -75,7 +76,6 @@ class Main:
         return True
 
     def drop_passenger(self, bus):
-        """Gestiona la baja de un pasajero."""
         if bus.get_list_len() == 0:
             print("\nNo passengers to drop off.")
             return
@@ -134,4 +134,4 @@ class Main:
 
 
 ux = Main()
-ux.actions(2)
+ux.actions(3)
