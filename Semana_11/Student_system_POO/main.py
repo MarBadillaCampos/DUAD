@@ -12,11 +12,12 @@ def main():
                 match option:
                     case 1:
                         name = menu.ask_name()
+                        group = menu.ask_group()
                         spanish_score = menu.ask_spanish_score()
                         english_score = menu.ask_english_score()
                         social_score = menu.ask_social_score()
                         science_score = menu.ask_science_score()
-                        student = StudentObj(name, spanish_score, english_score, social_score, science_score)
+                        student = StudentObj(name, group, spanish_score, english_score, social_score, science_score)
                         
                         stuHandler.add_student_to_list(student)
 
@@ -24,25 +25,45 @@ def main():
                             response = menu.ask_for_another_student()
                             if response.lower() == 'yes':
                                 name = menu.ask_name()
+                                group = menu.ask_group()
                                 spanish_score = menu.ask_spanish_score()
                                 english_score = menu.ask_english_score()
                                 social_score = menu.ask_social_score()
                                 science_score = menu.ask_science_score()
-                                aux_student = StudentObj(name, spanish_score, english_score, social_score, science_score)
+                                aux_student = StudentObj(name, group, spanish_score, english_score, social_score, science_score)
 
                                 stuHandler.add_student_to_list(aux_student)
-
-                            elif response.lower() == 'false':
-                                break
+                            elif response.lower() == 'no':
+                                bk_opt = menu.back_option()
+                                if bk_opt == 'yes':
+                                    break
+                                elif bk_opt == 'no':
+                                    continue
+                                else:
+                                    print('Invalid option, try again')
                             else:
                                 print('Invalid option, try again')
-
-                        print('Estudiantes agregados:')
-                        for s in stuHandler.student_list:
-                            print(f"{s.name} - Español: {s.spanish_score}, Inglés: {s.english_score}, Sociales: {s.social_score}, Ciencias: {s.science_score}")
-
                     case 2:
-                       print('case 2')
+                        my_list = stuHandler.get_students_list()
+                        if not my_list:
+                            print('=========== Empty List ===========')
+                            bk_opt = menu.back_option()
+                            if bk_opt == 'yes':
+                                continue
+                            elif bk_opt == 'no':
+                                break
+                            else:
+                                print('Invalid Option')
+                        else:
+                            print('Estudiantes agregados:')
+                            stuHandler.read_student_from_list()
+                            bk_opt = menu.back_option()
+                            if bk_opt == 'yes':
+                                continue
+                            elif bk_opt == 'no':
+                                break
+                            else:
+                                print('Invalid Option')
                     case 3:
                         print('case 3')
                     case 4:
