@@ -107,6 +107,16 @@ class MenuHandler:
             except ValueError as e:
                 print(f'{e}')
 
+    def students_format(self,aux):
+        print("===================================")
+        print(f" Full Name:       {aux.name}")
+        print(f" Group:           {aux.group}")
+        print(f" Spanish:         {aux.spanish_score}")
+        print(f" English:         {aux.english_score}")
+        print(f" Social Studies : {aux.social_score}")
+        print(f" Science :        {aux.science_score}")
+        print("===================================\n")
+
        
     
 

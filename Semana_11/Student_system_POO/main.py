@@ -56,7 +56,7 @@ def main():
                                 print('Invalid Option')
                         else:
                             print('Estudiantes agregados:')
-                            stuHandler.read_student_from_list()
+                            stuHandler.read_students_list(menu)
                             bk_opt = menu.back_option()
                             if bk_opt == 'yes':
                                 continue
@@ -65,7 +65,26 @@ def main():
                             else:
                                 print('Invalid Option')
                     case 3:
-                        print('case 3')
+                        my_list = stuHandler.get_students_list()
+                        if not my_list:
+                            print('=========== Empty List ===========')
+                            bk_opt = menu.back_option()
+                            if bk_opt == 'yes':
+                                continue
+                            elif bk_opt == 'no':
+                                break
+                            else:
+                                print('Invalid Option')
+                        else:
+                           average_list = stuHandler.get_average_grades()
+                           sorted_list = stuHandler.sort_my_average_list(average_list)
+                           stuHandler.read_average_list(sorted_list)
+                           if bk_opt == 'yes':
+                                continue
+                           elif bk_opt == 'no':
+                                break
+                           else:
+                               print('Error')
                     case 4:
                        print('case 4')
                     case 5:

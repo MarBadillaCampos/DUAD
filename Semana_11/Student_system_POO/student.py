@@ -7,6 +7,7 @@ class StudentObj:
         self.english_score = english_score
         self.social_score = social_score
         self.science_score = science_score
+        self.average_grade = None
     
     def __str__(self):
         return (f"Nombre: {self.name}, "
