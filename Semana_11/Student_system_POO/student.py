@@ -1,5 +1,5 @@
 
-class StudentObj:
+class student:
     def __init__(self,name, group, spanish_score,english_score,social_score,science_score):
         self.name = name
         self.group = group
@@ -7,13 +7,17 @@ class StudentObj:
         self.english_score = english_score
         self.social_score = social_score
         self.science_score = science_score
-        self.average_grade = None
+        self.average_grade = int((spanish_score + english_score + social_score + science_score)/4)
     
-    def __str__(self):
-        return (f"Nombre: {self.name}, "
-                f"Group:{self.group}, "
-                f"Español:{self.spanish_score}, "
-                f"Inglés: {self.english_score}, "
-                f"Sociales:{self.social_score}, "
-                f"Ciencias: {self.science_score}")
+    def to_dict(self):
+        return {
+            "name": self.name,
+            "group": self.group,
+            "spanish_score": self.spanish_score,
+            "english_score": self.english_score,
+            "social_score": self.social_score,
+            "science_score": self.science_score
+        }
+    
+
     
