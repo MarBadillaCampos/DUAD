@@ -1,4 +1,4 @@
-
+import os
 class actionHandler:
     def __init__(self):
         self.student_list = []
@@ -9,7 +9,11 @@ class actionHandler:
     def get_student_list(self):
         return self.student_list
     
-    def read_student_list(self):
+    def read_student_list(self,menu_handler):
+        for student in self.student_list:
+            menu_handler.students_format(student)
+
+    def read_student_list_dos(self):
          for stu in self.student_list:
              print(f'Name: {stu.name}, Group: {stu.group}, Spanish Score: {stu.spanish_score}, English Score: {stu.english_score}, Social Studies Score: {stu.social_score}, Science Score: {stu.science_score}, Average Score: {stu.average_grade}')
 
@@ -62,16 +66,40 @@ class actionHandler:
         print(f' Total Average Grade: {avg:.2f}')
 
 
-    def delete_student(self,menu_handler):
-        if len(self.student_list) == 0:
-            print("\nNo Students to delete it.")
-            return
-        name = menu_handler.delete_name()
-        if name in self.student_list:
-            self.student_list.remove(name)
-            print(f"\nStudent [{name}] deleted it.")
-            print(f"Student List: {self.student_list}")
-        else:
-            print(f"Student [{name}] not found in the System.")
+    def delete_student(self,delete_name):
+        for student in self.get_student_list():
+            if student.name == delete_name:
+                self.student_list.remove(student)
+        return self.student_list
+    
+    def failed_students(self):
+        failed_stu = []
+        for student in self.student_list:
+            failed_subjects = []  
+
+            if student.spanish_score <= 60:
+                failed_subjects.append(("Spanish", student.spanish_score))
+            if student.english_score <= 60:
+                failed_subjects.append(("English", student.english_score))
+            if student.social_score <= 60:
+                failed_subjects.append(("Social", student.social_score))
+            if student.science_score <= 60:
+                failed_subjects.append(("Science", student.science_score))
+
+            if failed_subjects:  
+                failed_stu.append((student, failed_subjects))
+        
+        return failed_stu
+
+    
+    def read_failed_student_list(self, failed_stu):
+        for stu, subjects in failed_stu:
+            print(f"\nName: {stu.name}, Group: {stu.group}")
+            print("  Failed subjects:")
+            for subj, score in subjects:
+                print(f"    - {subj}: {score}")
+
+    def clear_console(self):
+        os.system('cls' if os.name == 'nt' else 'clear')
                 
     

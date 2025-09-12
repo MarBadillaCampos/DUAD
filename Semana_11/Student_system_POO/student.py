@@ -16,8 +16,10 @@ class student:
             "spanish_score": self.spanish_score,
             "english_score": self.english_score,
             "social_score": self.social_score,
-            "science_score": self.science_score
+            "science_score": self.science_score,
+            "average_grade": self.average_grade
         }
+    
     
 
     

@@ -16,13 +16,16 @@ class DataHandler:
         else:
             print('This File is already exists, information added it')
 
-    def write_csv_file(self, file_path, headers, data):
-        file_exists = self.validate_data(file_path)
-        with open(file_path, 'a', newline='', encoding='utf-8') as file:
-            writer = csv.DictWriter(file, fieldnames=headers)
-            if not file_exists:  
-             writer.writeheader()
-            writer.writerows(data)
+    def write_csv_file(self,file_path,headers,data):
+        with open(file_path,'w',newline='', encoding='utf-8') as file:
+            writer = csv.DictWriter(file, headers)
+
+            file.seek(0,2)
+            if file.tell() == 0:
+                writer.writeheader()
+            
+            for row in data:
+                writer.writerow(row)
  #Import   
     def read_csv_file_import(self,file_path):
         if self.validate_data(file_path):
@@ -31,7 +34,7 @@ class DataHandler:
                 data = list(reader)
 
             for row in data:
-                for key in ['spanish_grade', 'english_grade', 'social_grade', 'science_grade']:
+                for key in ['spanish_score', 'english_score', 'social_score', 'science_score']:
                     try:
                         row[key] = int(row[key])
                     except ValueError:
