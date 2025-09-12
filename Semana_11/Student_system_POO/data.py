@@ -16,16 +16,12 @@ class DataHandler:
         else:
             print('This File is already exists, information added it')
 
-    def write_csv_file(self,file_path,headers,data):
-        with open(file_path,'w',newline='', encoding='utf-8') as file:
+    def write_csv_file(self, file_path, headers, data):
+        with open(file_path, 'a', newline='', encoding='utf-8') as file:
             writer = csv.DictWriter(file, headers)
-
-            file.seek(0,2)
-            if file.tell() == 0:
-                writer.writeheader()
-            
             for row in data:
                 writer.writerow(row)
+
  #Import   
     def read_csv_file_import(self,file_path):
         if self.validate_data(file_path):

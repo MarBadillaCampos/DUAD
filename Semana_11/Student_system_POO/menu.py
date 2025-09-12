@@ -21,7 +21,7 @@ class menuHandler:
     def ask_name(self):
         while True:
             try:
-                name = input('Add your name: ')
+                name = input('Add your name: ').strip().upper()
                 if not name.replace(" ", "").isalpha():
                     raise ValueError('Name must contain letters only. Please, try again!')
                 break
@@ -101,19 +101,28 @@ class menuHandler:
         return other_student
     
     def confirm_action(self):
-        confirm_ac = input('Confirm that you really want to remove this student: [yes] or [no]')
-        return confirm_ac
+        while True:
+            try: 
+                confirm_ac = input('Confirm that you really want to remove this student: [yes] or [no]').strip().lower()
+
+                if confirm_ac in ('yes', 'no'):
+                    return confirm_ac
+                else:
+                    raise ValueError ('Input must be [yes] or [no]')
+            except ValueError as e:
+                print(f'{e}')
     
     def ask_for_delete_name(self):
         while True:
             try:
-                name = input('Add the name that you would like to drop off: ')
+                name = input('Add the name that you would like to delete: ').upper().strip()
                 if not name.replace(" ", "").isalpha():
                     raise ValueError('Name must contain letters only. Please, try again!')
                 return name
             except ValueError as e:
                 print(f"Invalid input: {e}")
-    
+
+
     def back_option(self):
         while True:
             try: 

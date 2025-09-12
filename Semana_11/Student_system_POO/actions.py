@@ -66,24 +66,29 @@ class actionHandler:
         print(f' Total Average Grade: {avg:.2f}')
 
 
-    def delete_student(self,delete_name):
+    def delete_student(self, delete_name, delete_group):
         for student in self.get_student_list():
-            if student.name == delete_name:
+            if student.name == delete_name and student.group == delete_group:
                 self.student_list.remove(student)
-        return self.student_list
+                print(f'Deleted Student :  Name: {student.name} Group: {student.group}')
+                break
+        else:
+            print('Student not found')
+
+
     
     def failed_students(self):
         failed_stu = []
         for student in self.student_list:
             failed_subjects = []  
 
-            if student.spanish_score <= 60:
+            if student.spanish_score < 60:
                 failed_subjects.append(("Spanish", student.spanish_score))
-            if student.english_score <= 60:
+            if student.english_score < 60:
                 failed_subjects.append(("English", student.english_score))
-            if student.social_score <= 60:
+            if student.social_score < 60:
                 failed_subjects.append(("Social", student.social_score))
-            if student.science_score <= 60:
+            if student.science_score < 60:
                 failed_subjects.append(("Science", student.science_score))
 
             if failed_subjects:  
@@ -101,5 +106,13 @@ class actionHandler:
 
     def clear_console(self):
         os.system('cls' if os.name == 'nt' else 'clear')
+
+    
+    def student_exist(self, delete_name, delete_group):
+        for student in self.get_student_list():
+            if student.name == delete_name and student.group == delete_group:
+                return True
+        return False
+
                 
     
