@@ -24,7 +24,7 @@ class Bus:
     def add_passenger(self, passenger):       
         if self.get_list_len() < self.max_passengers:
             self.passengers.append(passenger)
-            print(f"Passenger [{passenger}] boarded the Bus.")
+            print(f"Passenger [{passenger.name}] boarded the Bus.")
         else:
             print("The bus is full!")
 
@@ -61,32 +61,28 @@ class Bus:
             except ValueError as e:
                 print(f'{e}')
 
+    def show_passengers(self):
+        if self.get_list_len() == 0:
+            print("\nNo passengers on board.")
+            return False
+        print("\nPassengers on board:")
+        for p in self.passengers:
+            print(f"   - {p.name}")
+        return True
+
+    def drop_passenger(self,drop_name):
+        for pass_aux in self.passengers:
+            if pass_aux.name == drop_name:
+               self.passengers.remove(pass_aux)
+               print(f"\nPassenger [{pass_aux.name}] dropped off the Bus.")
+               break
+        else:
+            print(f"Passenger [{pass_aux.name}] not found on board.")
+
 
 class Main:
     def __init__(self):
         pass
-
-    def show_passengers(self, bus):
-        if bus.get_list_len() == 0:
-            print("\nNo passengers on board.")
-            return False
-        print("\nPassengers on board:")
-        for p in bus.passengers:
-            print(f"   - {p}")
-        return True
-
-    def drop_passenger(self, bus):
-        if bus.get_list_len() == 0:
-            print("\nNo passengers to drop off.")
-            return
-        name = bus.drop_off_name()
-        if name in bus.passengers:
-            bus.passengers.remove(name)
-            print(f"\nPassenger [{name}] dropped off the Bus.")
-            print(f"New passenger list on board: {bus.passengers}")
-        else:
-            print(f"Passenger [{name}] not found on board.")
-
     def actions(self, sits):
         bus = Bus(sits)
         while True:
@@ -98,36 +94,41 @@ class Main:
 
                     see_list = bus.passengers_list_name()
                     if see_list == 'yes':
-                        self.show_passengers(bus)
+                        bus.show_passengers()
                         drop = bus.ask_drop_off_passenger()
                         if drop == 'yes':
-                            self.drop_passenger(bus)
+                            name = bus.drop_off_name()
+                            bus.drop_passenger(name)
+                            bus.show_passengers()
+                            break
                         else:
                             break  
                     else:
                         drop = bus.ask_drop_off_passenger()
                         if drop == 'yes':
-                            self.drop_passenger(bus)
+                            bus.drop_passenger(name)
                         else:
                             break 
-
                 else:
-                    if bus.ask_for_passenger() == 'yes':
+                    op =  bus.ask_for_passenger()
+                    if op == 'yes':
                         name = bus.ask_passenger_name()
-                        bus.add_passenger(name)
-                    else:
+                        passenger = Person(name) 
+                        bus.add_passenger(passenger)
+                    elif op == 'no':
                         see_list = bus.passengers_list_name()
                         if see_list == 'yes':
-                            self.show_passengers(bus)
+                            bus.show_passengers()
                             drop = bus.ask_drop_off_passenger()
                             if drop == 'yes':
-                                self.drop_passenger(bus)
-                        else:
-                            drop = bus.ask_drop_off_passenger()
-                            if drop == 'yes':
-                                self.drop_passenger(bus)
-                        break
-
+                                name = bus.drop_off_name()
+                                bus.drop_passenger(name)
+                                bus.show_passengers()
+                                break
+                            else:
+                                break
+                    else:
+                        print('Error')
             except Exception as e:
                 print(f'An unexpected error occurred: {e}')
 
