@@ -3,10 +3,10 @@ class BankAccount:
         self.balance = 0
 
     def add_money(self):
-        print('Add money')
+        raise NotImplementedError
     
     def withdraw_money(self):
-        print('Take out money')
+         raise NotImplementedError
 
 
 class SavingAccount(BankAccount):
@@ -21,10 +21,10 @@ class SavingAccount(BankAccount):
     def withdraw_money(self, money):
         if self.balance - money >= self.min_balance:
             self.balance -= money
-            return self.balance
+            return print(f'Currently Balance: {self.balance} $')
         else:
             print('Is not possible to take money off from your account,there is not enough money')
-            return self.balance
+            print(f'Currently Balance: {self.balance} $, but you are trying to withdraw {money} $, [Please try again!]')
 
 
 class Menu:
@@ -40,11 +40,29 @@ class Menu:
                 print("Invalid input. Please enter a numeric value.")
     
     def ask_add_option(self):
-        return input('Do you want to add money [yes] or [no]: ')
+        while True:
+            try:
+                add_money = input('Do you want to add money [yes] or [no]: ')
+
+                if add_money in ('yes' 'no'):
+                    return add_money
+                else:
+                    raise  ValueError ('Input must be [yes] or [no]')
+            except ValueError as e:
+                print(f'{e}')
+        
     
     def ask_withdraw_option(self):
-        return input('Do you want to withdraw money [yes] or [no]: ')
-
+        while True:
+            try:
+                withdraw_money = input('Do you want to withdraw money [yes] or [no]: ')
+                if withdraw_money in ('yes' 'no'):
+                    return withdraw_money
+                else:
+                    raise  ValueError ('Input must be [yes] or [no]')
+            except ValueError as e:
+                print(f'{e}')
+        
 
 def main():
     menu_handler = Menu()
@@ -54,18 +72,21 @@ def main():
         user_option = menu_handler.ask_add_option().lower()
         if user_option == 'yes':
             money = menu_handler.ask_for_money()
-            print(f"New balance: {account.add_money(money)}")
+            print(f"Your Currently Balance: {account.add_money(money)}")
         elif user_option == 'no':
             while True:
                 wd_op = menu_handler.ask_withdraw_option()
                 if wd_op == 'yes':
                     money = menu_handler.ask_for_money()
-                    print(account.withdraw_money(money))
-                else:
+                    account.withdraw_money(money)
+                elif wd_op == 'no':
                     break
-        else:
+                else:
+                    print('Error')
             break
-
+        else:
+            print('Error')
+        
 
 if __name__ == '__main__':
     main()
