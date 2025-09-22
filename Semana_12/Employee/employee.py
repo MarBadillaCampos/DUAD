@@ -1,25 +1,25 @@
 class Employee:
     def __init__(self, name, salary):
-        self._name = name
-        self.salary = salary 
+        self.__name = name #private
+        self.__salary = salary #private
 
     @property
     def name(self):
-        return self._name
+        return self.__name
 
     @name.setter
     def name(self, new_name):
-        self._name = new_name
+        self.__name = new_name
 
     @property
     def salary(self):
-        return self._salary
+        return self.__salary
 
     @salary.setter
     def salary(self, new_salary):
         if new_salary <= 0:
             raise ValueError("Negative input")
-        self._salary = new_salary 
+        self.__salary = new_salary 
 
     def promote(self, value):
         increase = int(self.salary * value)

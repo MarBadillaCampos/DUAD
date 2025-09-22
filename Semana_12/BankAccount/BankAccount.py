@@ -3,10 +3,10 @@ class BankAccount:
         self.balance = 0
 
     def add_money(self):
-        raise NotImplementedError
+        pass 
     
     def withdraw_money(self):
-         raise NotImplementedError
+         pass
 
 
 class SavingAccount(BankAccount):
@@ -23,7 +23,7 @@ class SavingAccount(BankAccount):
             self.balance -= money
             return print(f'Currently Balance: {self.balance} $')
         else:
-            print('Is not possible to take money off from your account,there is not enough money')
+            print(f'Is not possible to take money off from your account, you can not have less than {self.min_balance} $')
             print(f'Currently Balance: {self.balance} $, but you are trying to withdraw {money} $, [Please try again!]')
 
 
