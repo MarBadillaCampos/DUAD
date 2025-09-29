@@ -2,30 +2,25 @@ class BankAccount:
     def __init__(self):
         self.balance = 0
 
-    def add_money(self):
-        pass 
+    def add_money(self, money):
+        self.balance += money
+        return self.balance
     
-    def withdraw_money(self):
-         pass
-
+    def withdraw_money(self, money):
+        self.balance -= money
+        return self.balance
 
 class SavingAccount(BankAccount):
     def __init__(self, min_balance):
         super().__init__()
         self.min_balance = min_balance
     
-    def add_money(self, money):
-        self.balance += money
-        return self.balance
-    
     def withdraw_money(self, money):
         if self.balance - money >= self.min_balance:
-            self.balance -= money
-            return print(f'Currently Balance: {self.balance} $')
+            return super().withdraw_money(money)
         else:
-            print(f'Is not possible to take money off from your account, you can not have less than {self.min_balance} $')
-            print(f'Currently Balance: {self.balance} $, but you are trying to withdraw {money} $, [Please try again!]')
-
+            print(f"Cannot withdraw. Minimum balance is {self.min_balance}")
+            return None
 
 class Menu:
     def ask_for_money(self):
@@ -63,7 +58,6 @@ class Menu:
             except ValueError as e:
                 print(f'{e}')
         
-
 def main():
     menu_handler = Menu()
     account = SavingAccount(100)
@@ -78,7 +72,12 @@ def main():
                 wd_op = menu_handler.ask_withdraw_option()
                 if wd_op == 'yes':
                     money = menu_handler.ask_for_money()
-                    account.withdraw_money(money)
+                    result = account.withdraw_money(money)
+                    if result is not None: 
+                        print(f"Your Currently Balance: {account.balance}")
+                    else:
+                         print(f"You cannot withdraw that mount. your balance is {account.balance}")
+
                 elif wd_op == 'no':
                     break
                 else:
