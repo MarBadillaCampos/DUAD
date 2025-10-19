@@ -7,15 +7,15 @@ class Number:
         self.num2 = num2
     
     def valid_numbers(func):
-        def wrapper(num, *args):
-            if not (isinstance(num.num1, (int)) and isinstance(num.num2, (int))):
+        def wrapper(self, *args):
+            if not (isinstance(self.num1, (int)) and isinstance(self.num2, (int))):
                 raise ValueError('Only Numbers are allowed it')
-            return func(num, *args)
+            return func(self, *args)
         return wrapper
     
     @valid_numbers
     def sum(self):
-        return self.num1 + self.num1
+        return self.num1 + self.num2
 
-n = Number(2,7)
+n = Number(2,4)
 print(n.sum())
