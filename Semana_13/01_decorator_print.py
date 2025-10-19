@@ -1,3 +1,4 @@
+#01-Cree un decorador que haga print de los parámetros y retorno de la función que decore.
 class Person:
     first_name: str
     last_name: str
