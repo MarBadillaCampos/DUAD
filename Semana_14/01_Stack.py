@@ -28,16 +28,11 @@ class Stack:
    new_node.next = self.head
    self.head = new_node
    
-
-
-
   def pop(self):
-   current_node = self.head
-   next_node = current_node.next
-   self.head = next_node
+   current_node = self.head 
+   next_node = current_node.next 
+   self.head = next_node 
    
-
-
 
 third_node = Node("Soy el tercer nodo")
 second_node = Node("Soy el segundo nodo", third_node)
@@ -48,6 +43,10 @@ linked_list.print_structure()
 
 print("Agregando un elemento")
 linked_list.push(Node("Soy el nuevo nodo!"))
+linked_list.print_structure()
+
+print("Agregando un elemento")
+linked_list.push(Node("Soy el segundo-nuevo nodo!"))
 linked_list.print_structure()
 
 print("Eliminando un elemento")
