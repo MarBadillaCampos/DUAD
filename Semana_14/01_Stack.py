@@ -34,22 +34,22 @@ class Stack:
    self.head = next_node 
    
 
-third_node = Node("Soy el tercer nodo")
-second_node = Node("Soy el segundo nodo", third_node)
-first_node = Node("Soy el primer nodo", second_node)
+third_node = Node("Third Node")
+second_node = Node("Second Node", third_node)
+first_node = Node("First Node", second_node)
 
 linked_list = Stack(first_node)
 linked_list.print_structure()
 
-print("Agregando un elemento")
-linked_list.push(Node("Soy el nuevo nodo!"))
+print("Add new Node")
+linked_list.push(Node("New Node!"))
 linked_list.print_structure()
 
-print("Agregando un elemento")
-linked_list.push(Node("Soy el segundo-nuevo nodo!"))
+print("Add Second-new Node")
+linked_list.push(Node("I am the new-second Node!"))
 linked_list.print_structure()
 
-print("Eliminando un elemento")
+print("Delete Value")
 linked_list.pop()
 linked_list.print_structure()
 
