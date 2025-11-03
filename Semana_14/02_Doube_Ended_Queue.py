@@ -58,25 +58,25 @@ class double_ended_queue:
     return value
 
 
-third_node = Node("Soy el tercer nodo")
-second_node = Node("Soy el segundo nodo", third_node)
-first_node = Node("Soy el primer nodo", second_node)
+third_node = Node("Im the third Node")
+second_node = Node("Im the second,Node", third_node)
+first_node = Node("Im the first, Node", second_node)
 
 double_queue = double_ended_queue(first_node)
 double_queue.print_structure()
 
-print("Agregando un elemento con push_left ")
-double_queue.push_left(Node("Soy el nuevo-primero nodo!"))
+print("Add value with push_left ")
+double_queue.push_left(Node("Im the new-first,Node!"))
 double_queue.print_structure()
 
-print("Agregando un elemento con push right")
-double_queue.push_right(Node("Soy el nuevo-ultimo nodo!"))
+print("Add value with push right")
+double_queue.push_right(Node("Im the new-last Node!"))
 double_queue.print_structure()
 
-print("Eliminando un elemento con pop left")
+print("Delete with pop left")
 double_queue.pop_left()
 double_queue.print_structure()
 
-print("Eliminando un elemento con pop right")
+print("Delete with pop right")
 double_queue.pop_right()
 double_queue.print_structure()
