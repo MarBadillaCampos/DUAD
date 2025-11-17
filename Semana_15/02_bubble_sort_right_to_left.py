@@ -8,6 +8,7 @@ def bubble_sort_right_to_left(list_to_sort):
              list_to_sort[index] = next_element
              list_to_sort[index - 1] = current_element   
 
+
 my_test_list = [9,8,7,6,5,4,3,2,1]
 print(f"Before Bubble Sort {my_test_list}")
 bubble_sort_right_to_left(my_test_list)
