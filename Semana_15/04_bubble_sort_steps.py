@@ -10,7 +10,7 @@ def bubble_sort(sort_list):
             print(f'-- Iteration {index}. Current Element: {current_element}, Next Element: {next_element}')
 
             if current_element > next_element:
-                print('Current Element is bigger than Next element. lets swapped it...')
+                print('Current element is bigger than the next element. Let’s swap them...')
                 swap = swap + 1
                 sort_list[index] = next_element
                 sort_list[index + 1] = current_element
@@ -20,3 +20,4 @@ def bubble_sort(sort_list):
 my_list = [5, 4, 3, 2, 1]
 bubble_sort(my_list)
 print(my_list)
+ #Duda
