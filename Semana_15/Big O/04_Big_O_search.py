@@ -10,7 +10,6 @@ def linear_search(my_list, target):
 #print(linear_search(my_list, 3))
 
 
-
 def binary_search(my_list, target):
     low = 0
     high = len(my_list) - 1 #O(1)
@@ -35,8 +34,9 @@ print(binary_search(my_list, 4))
 
 #- ¿En qué condiciones conviene usar cada uno?
 # Linear Search se utiliza cuando la lista no esta ordenada y no se necesita una lista muy grande. (Busqueda simple) 
-# Cuando la lista esta ordenada 
+# Cuando la lista es esta ordenada y es de mayor extension. (miles) lo cual implica que es una busqueda compleja
 
 
 #- ¿Qué pasa si la lista no está ordenada?
 #Linear Search no tendra ningun problema en recorrer la lista si no esta ordenada. 
+#Binary Search No funciona si la lista esta desordenada, ejemplo donde podria fallar  
