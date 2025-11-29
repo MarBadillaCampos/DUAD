@@ -1,7 +1,7 @@
 
 
 def bubble_sort(my_list):
-    for out_index in range(0, len(my_list) - 1): #O(n^2)
+    for out_index in range(0, len(my_list) - 1): #O(n)
         for index in range(0, len(my_list) - 1 - out_index): #O(n^2)
             current_value = my_list[index] #O(1)
             next_value = my_list[index + 1] #O(1)

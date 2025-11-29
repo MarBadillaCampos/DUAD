@@ -1,12 +1,12 @@
 #Version 1
-def manual_add(n):
+def manual_add(number):
     result = 0 #O(1)
     for i in range(1, number + 1): #O(n)
         result += i #O(1)
     return result
 
 #version 2
-def add_formula(n):
+def add_formula(number):
     return number * (number + 1) // 2 #O(1)
 
 10 *(10 + 1)
