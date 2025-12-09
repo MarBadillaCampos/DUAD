@@ -38,5 +38,71 @@ def lower_case(phrase):
    return lower_cont
 
 
-word = 'I love Nación Sushi'
-print(f'There is {upper_case(word)} upper cases and {lower_case(word)} lower cases')
+#word = 'Hola Maria'
+#print(f'There is {upper_case(word)} upper cases and {lower_case(word)} lower cases')
+
+
+#6. Cree una función que acepte un string con palabras separadas por un guión y retorne un string igual 
+#   pero ordenado alfabéticamente.
+#    1. Hay que convertirlo a lista, ordenarlo, y convertirlo nuevamente a string.
+#    2. “python-variable-funcion-computadora-monitor” → 
+# “computadora-funcion-monitor-python-variable”
+
+def create_list(phrase):
+   my_new_list = []
+   new_string = phrase.split('-')
+   for index in new_string:
+      my_new_list.append(index) 
+   return my_new_list
+
+def sorted_list(my_list):
+    my_list.sort()
+    return my_list
+
+def list_to_String(my_list):
+    record = ''
+    for index in range(0, len(my_list)):
+        record = record + my_list[index]
+        if index != len(my_list)-1:
+            record = record + '-'  
+    return record
+      
+#phrase = "python-variable-funcion-computadora-monitor"
+#my_list = create_list(phrase)
+#print(my_list)
+#sorted_aux_list = sorted_list(my_list)
+#print(list_to_String(sorted_aux_list))
+
+#7. Cree una función que acepte una lista de números y retorne una lista con los números primos de la misma.
+#    1. [1, 4, 6, 7, 13, 9, 67] → [7, 13, 67]
+#    2. Tip 1: Investigue la logica matematica para averiguar si un numero es primo, y conviertala a codigo. No busque el codigo, eso no ayudaria.
+
+
+def isPrime(number):
+    if number <= 1:
+        return False
+    if number == 2:
+        return True
+    if number % 2 == 0:
+        return False
+    
+    sqrt = int(number**0.5) + 1
+    for i in range(3, sqrt, 2): 
+        if number % i == 0:
+            return False
+
+    return True
+
+
+def validate_is_prime(my_list):
+    prime_list = []
+    for index in range(0, len(my_list)):
+        if isPrime(my_list[index]) == True : 
+            prime_list.append(my_list[index])
+    return prime_list
+
+my_list = [1, 4, 6, 7, 13, 9, 67]
+validate_is_prime(my_list)
+
+
+   
