@@ -21,4 +21,18 @@ def test_bubble_sort_bigger_list():
     output_list = list(range(1, 101))
     result = bubble_sort(input_list)
     assert result == output_list
-    
+
+def test_validate_inputs_integer():
+    input_list = 2
+    with pytest.raises(ValueError):
+            bubble_sort(input_list)
+
+def test_validate_inputs_str():
+    input_list = 'str'
+    with pytest.raises(ValueError):
+            bubble_sort(input_list)  
+
+def test_validate_inputs_None():
+    input_list = None
+    with pytest.raises(ValueError):
+            bubble_sort(input_list)

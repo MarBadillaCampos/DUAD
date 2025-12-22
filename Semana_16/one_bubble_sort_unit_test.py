@@ -1,16 +1,21 @@
 
 def bubble_sort(my_list):
-    for out_index in range(0, len(my_list) - 1):
-        for index in range(0, len(my_list) - 1 - out_index):
-            current_value = my_list[index]
-            next_value = my_list[index + 1]
+    if isinstance(my_list, int) or isinstance(my_list, str) or my_list == None:
+         raise ValueError('Invalid Input')
+    else:
+        for out_index in range(0, len(my_list) - 1):
+            for index in range(0, len(my_list) - 1 - out_index):
+                current_value = my_list[index]
+                next_value = my_list[index + 1]
 
-            if current_value > next_value:
-                my_list[index] = next_value
-                my_list[index + 1] = current_value
+                if current_value > next_value:
+                    my_list[index] = next_value
+                    my_list[index + 1] = current_value
 
-    return my_list
+        return my_list
 
+#my_list = [5, 3, 8, 6, 2] 
+#print(bubble_sort(my_list))
 
 
 #Version 2
