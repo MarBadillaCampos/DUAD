@@ -9,5 +9,5 @@ def find_vowels(phrase):
     return cont
 
 
-#text = 'Hola Mundo'
-#print(find_vowels(text))
+text = 'Hola Mundo'
+print(find_vowels(text))
