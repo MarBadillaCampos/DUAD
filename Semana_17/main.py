@@ -1,6 +1,7 @@
 from gui import InterfaceHandler
 from movement import Movement
 from actions import actionHandler
+from movement import Movement
 
 
 def main():
@@ -17,7 +18,10 @@ def main():
 
     aux_movement = Movement(today_date,name_category,cost,movement_type)
     actions_handler.add_movement(aux_movement)
-    actions_handler.read_movement_list()
+    aux_values = actions_handler.read_movement_list()
+    print(aux_values)
+    #gui_handler.display_information(aux_values)
+    #actions_handler.read_movement_list(copy_list)
 
 
 

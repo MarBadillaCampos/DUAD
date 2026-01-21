@@ -6,10 +6,10 @@ class Movement:
         self.cost = cost
         self.mv_type = mv_type
     
-    def to_dict(self):
-        return {
-            "date" : self.date,
-            "category" : self.category,
-            "cost" : self.cost,
-            "mv_type" : self.mv_type
-        }
+    def display(self):
+        print(
+            f"Date: {self.date} | "
+            f"Category: {self.category} | "
+            f"Cost: {self.cost} | "
+            f"Type: {self.mv_type}"
+        )

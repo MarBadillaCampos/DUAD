@@ -5,7 +5,8 @@ from datetime import date
 class InterfaceHandler:
 
     def __init__(self):
-       sg.theme('Dark Blue 3')
+        pass
+
 
     def ask_for_category(self):
         layout = [[sg.Text("Add your Category Name"),sg.InputText(key="-CATEGORY-")],
@@ -51,5 +52,18 @@ class InterfaceHandler:
                     "cost": values["-COST-"],
                     "movement_type": values["-MV_TYPE-"]
                 }
+    def display_information(self,data):
+        headings = ["Date", "Category", "Cost", "Type"]
+        layout = [
+            [sg.Table(
+                values=data,
+                headings=headings,
+                key="-TABLE-",
+                auto_size_columns=True,
+                justification="center",
+                num_rows=5
+            )],
+            [sg.Button("Salir")]
+        ]
 
-        
+        sg.Window("Tabla básica", layout).read(close=True)

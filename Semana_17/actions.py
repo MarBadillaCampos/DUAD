@@ -1,4 +1,4 @@
-
+from movement import Movement
 
 class actionHandler:
 
@@ -9,9 +9,5 @@ class actionHandler:
         self.movement_list.append(movement)
     
     def read_movement_list(self):
-        for movement in self.movement_list:
-             print(f" Full date: {movement.date}")
-    
-
-        
-        
+        for values in self.movement_list:
+           values.display()
