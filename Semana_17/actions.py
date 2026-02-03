@@ -11,3 +11,18 @@ class actionHandler:
     def read_movement_list(self):
         for values in self.movement_list:
            values.display()
+    
+    def create_list_table(self):
+        aux_list = []
+        for values in self.movement_list:
+            date = values.date
+            category = values.category
+            cost = values.cost
+            mv_type = values.mv_type
+            new_list = [date,category,cost,mv_type]
+            aux_list.append(new_list)
+        return aux_list
+
+          
+    
+
