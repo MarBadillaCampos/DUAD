@@ -31,20 +31,32 @@ class InterfaceHandler:
             
             if event == "Aceptar":
                  category = values["-CATEGORY-"].strip()
+                 cost = values["-COST-"]
 
                  if category == "":
                     sg.popup("Category name cannot be empty value")
                     continue
                  
-                 if not category.isalpha():
+                 if not all(word.isalpha() for word in category.split(" ")):
                      sg.popup("Invalid input: numbers or special values are not allowed")
-                     continue                  
-                
+                     continue
+                 
+                 try:
+                     new_cost = float(cost)
+
+                     if  new_cost <= 0:
+                         sg.popup("Cost must be greater than 0")
+                         continue
+                  
+                 except ValueError:
+                     sg.popup("Invalid input")
+                     continue
+                 
                  window.close()
                  return {       
                     "today_time": today_date,
                     "category_name": category,
-                    "cost": values["-COST-"],
+                    "cost": new_cost,
                     "movement_type": values["-MV_TYPE-"]
                 }
             

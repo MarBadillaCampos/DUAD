@@ -1,7 +1,5 @@
 from gui import InterfaceHandler
-from movement import Movement
 from actions import actionHandler
-from movement import Movement
 
 
 def main():
