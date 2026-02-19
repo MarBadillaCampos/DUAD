@@ -11,13 +11,15 @@ class InterfaceHandler:
         pass
              
     def ask_for_financial_movement(self):
-        today_date = date.today()
+        today_date = date.today().strftime("%d-%m-%Y")
 
         layout = [
             [sg.Text("Add your Category Name"),sg.InputText(key="-CATEGORY-")],
-            [sg.Input(today_date.strftime("%Y-%m-%d"), disabled=True)],
+            [sg.Input(today_date, disabled=True)],
             [sg.Text('Cost: '), sg.InputText(key="-COST-")],
-            [sg.Text('Movement Type:'), sg.InputText(key="-MV_TYPE-")],
+            [sg.Text('Movement Type:'), 
+            sg.Radio("Income", "MOVEMENT", key="-INCOME-", default=True),
+            sg.Radio("Expense", "MOVEMENT", key="-EXPENSE-")],
             [sg.Button("Aceptar"), sg.Button("Cancel")]
         ]
 
@@ -32,6 +34,14 @@ class InterfaceHandler:
             if event == "Aceptar":
                  category = values["-CATEGORY-"].strip()
                  cost = values["-COST-"]
+                 today_date = str(today_date)
+
+
+                 if values["-INCOME-"]:
+                    movement_type = 'ingreso'
+
+                 if values["-EXPENSE-"]:
+                     movement_type = 'gasto'
 
                  if category == "":
                     sg.popup("Category name cannot be empty value")
@@ -40,7 +50,6 @@ class InterfaceHandler:
                  if not all(word.isalpha() for word in category.split(" ")):
                      sg.popup("Invalid input: numbers or special values are not allowed")
                      continue
-                 
                  try:
                      new_cost = float(cost)
 
@@ -57,15 +66,16 @@ class InterfaceHandler:
                     "today_time": today_date,
                     "category_name": category,
                     "cost": new_cost,
-                    "movement_type": values["-MV_TYPE-"]
+                    "movement_type": movement_type
                 }
+
             
     def display_information(self, actions_handler):               
         headings = ["Date", "Category", "Cost", "Type"]
 
         layout = [
             [sg.Table(
-                values=actions_handler.create_list_table(),
+                values=actions_handler.create_list(),
                 headings=headings,
                 key="-TABLE-",
                 auto_size_columns=False,
@@ -98,7 +108,8 @@ class InterfaceHandler:
                 )
 
                 actions_handler.add_movement(new_movement)
+                
 
-                window["-TABLE-"].update(values=actions_handler.create_list_table())
+                window["-TABLE-"].update(values=actions_handler.create_list())
 
         window.close()

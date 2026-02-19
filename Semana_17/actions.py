@@ -12,7 +12,7 @@ class actionHandler:
         for values in self.movement_list:
            values.display()
     
-    def create_list_table(self):
+    def create_list(self):
         aux_list = []
         for values in self.movement_list:
             date = values.date
