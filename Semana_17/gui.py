@@ -9,13 +9,40 @@ class InterfaceHandler:
 
     def __init__(self):
         pass
+
+    def ask_for_category(self):
+        layout = [[sg.Text("Add your Category Name"),sg.InputText(key="-CATEGORY-")],
+                  [sg.Text('Do you want to continue with the process?')],
+                  [sg.Button("Aceptar"), sg.Button("Cancel")]
+                  ]
+
+        window = sg.Window("Category", layout)
+
+        while True:
+            event, values = window.read()
+            if event == sg.WIN_CLOSED or event == 'Cancel':
+                window.close()
+                return None
+            
+            if event == "Aceptar":
+                category = values["-CATEGORY-"].strip()
+                if category == "":
+                    sg.popup("Category name cannot be empty value")
+                    continue
+
+                if not all(word.isalpha() for word in category.split(" ")):
+                     sg.popup("Invalid input: numbers or special values are not allowed")
+                     continue
+
+                window.close()
+                return category
+
              
-    def ask_for_financial_movement(self):
+    def ask_for_financial_movement(self ):
         today_date = date.today().strftime("%d-%m-%Y")
 
         layout = [
-            [sg.Text("Add your Category Name"),sg.InputText(key="-CATEGORY-")],
-            [sg.Input(today_date, disabled=True)],
+            [sg.Text('Fecha: '),sg.Input(today_date, disabled=True)],
             [sg.Text('Cost: '), sg.InputText(key="-COST-")],
             [sg.Text('Movement Type:'), 
             sg.Radio("Income", "MOVEMENT", key="-INCOME-", default=True),
@@ -32,9 +59,7 @@ class InterfaceHandler:
                 return None
             
             if event == "Aceptar":
-                 category = values["-CATEGORY-"].strip()
                  cost = values["-COST-"]
-                 today_date = str(today_date)
 
 
                  if values["-INCOME-"]:
@@ -43,13 +68,6 @@ class InterfaceHandler:
                  if values["-EXPENSE-"]:
                      movement_type = 'gasto'
 
-                 if category == "":
-                    sg.popup("Category name cannot be empty value")
-                    continue
-                 
-                 if not all(word.isalpha() for word in category.split(" ")):
-                     sg.popup("Invalid input: numbers or special values are not allowed")
-                     continue
                  try:
                      new_cost = float(cost)
 
@@ -62,9 +80,8 @@ class InterfaceHandler:
                      continue
                  
                  window.close()
-                 return {       
+                 return {    
                     "today_time": today_date,
-                    "category_name": category,
                     "cost": new_cost,
                     "movement_type": movement_type
                 }
@@ -95,14 +112,18 @@ class InterfaceHandler:
                 break
 
             if event == "Add Movement":
+                category_data = self.ask_for_category()
+                if category_data is None:
+                    continue
 
                 mv_data = self.ask_for_financial_movement()
                 if mv_data is None:
                     continue
 
+
                 new_movement = Movement(
                     mv_data["today_time"],
-                    mv_data["category_name"],
+                    category_data,
                     mv_data["cost"],
                     mv_data["movement_type"]
                 )
