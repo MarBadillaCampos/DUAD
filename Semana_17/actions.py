@@ -15,11 +15,11 @@ class actionHandler:
     def create_list(self):
         aux_list = []
         for values in self.movement_list:
-            date = values.date
+            today_date = values.today_date
             category = values.category
             cost = values.cost
             mv_type = values.mv_type
-            new_list = [date,category,cost,mv_type]
+            new_list = [today_date,category,cost,mv_type]
             aux_list.append(new_list)
         return aux_list
 

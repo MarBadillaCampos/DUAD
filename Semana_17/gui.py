@@ -1,7 +1,7 @@
 import FreeSimpleGUI as sg
 from datetime import date
 from movement import Movement
-import re
+from data import DataHandler
  
 
 
@@ -63,10 +63,10 @@ class InterfaceHandler:
 
 
                  if values["-INCOME-"]:
-                    movement_type = 'ingreso'
+                    mv_type = 'ingreso'
 
                  if values["-EXPENSE-"]:
-                     movement_type = 'gasto'
+                     mv_type = 'gasto'
 
                  try:
                      new_cost = float(cost)
@@ -81,14 +81,19 @@ class InterfaceHandler:
                  
                  window.close()
                  return {    
-                    "today_time": today_date,
+                    "today_date": today_date,
                     "cost": new_cost,
-                    "movement_type": movement_type
+                    "mv_type": mv_type
                 }
 
             
-    def display_information(self, actions_handler):               
-        headings = ["Date", "Category", "Cost", "Type"]
+    def display_information(self, actions_handler,data_handler):               
+        headings = ["today_date", "category", "cost", "mv_type"]
+        file = "./Semana_17/csv/financial_movements.csv"
+
+        movements = data_handler.load_movements(file)
+        for movement in movements:
+            actions_handler.add_movement(movement)
 
         layout = [
             [sg.Table(
@@ -109,6 +114,8 @@ class InterfaceHandler:
             event, values = window.read()
 
             if event == sg.WIN_CLOSED or event == "Cancel":
+                data_handler.validate_data(file)
+                data_handler.write_csv_file(file, actions_handler.movement_list)
                 break
 
             if event == "Add Movement":
@@ -120,17 +127,15 @@ class InterfaceHandler:
                 if mv_data is None:
                     continue
 
-
                 new_movement = Movement(
-                    mv_data["today_time"],
+                    mv_data["today_date"],
                     category_data,
                     mv_data["cost"],
-                    mv_data["movement_type"]
+                    mv_data["mv_type"]
                 )
 
                 actions_handler.add_movement(new_movement)
                 
-
                 window["-TABLE-"].update(values=actions_handler.create_list())
 
         window.close()
