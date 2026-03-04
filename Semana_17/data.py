@@ -10,7 +10,7 @@ class DataHandler:
     def validate_data(self,file_path):
             return os.path.exists(file_path)
     
-    def write_csv_file(self,file_path, movement):
+    def save_movements(self,file_path, movement):
         with open(file_path,'w',newline='', encoding='utf-8') as file:
             writer = csv.DictWriter(file, fieldnames=["today_date","category","cost","mv_type"])
 
@@ -20,7 +20,7 @@ class DataHandler:
                 writer.writerow(movement.to_dict())
     
 
-    def read_csv_file_import(self,file_path):
+    def read_movements(self,file_path):
         if self.validate_data(file_path):
             with open(file_path, 'r') as file:
                 reader = csv.DictReader(file)
@@ -38,7 +38,7 @@ class DataHandler:
             return []
         
     def load_movements(self, file_path):
-        data = self.read_csv_file_import(file_path)
+        data = self.read_movements(file_path)
         movements = []
         for row in data:
             movement = Movement(
