@@ -55,11 +55,11 @@ class InterfaceHandler:
                 start_date = values["-STARTDATE-"].strip()
                 end_date = values["-ENDDATE-"].strip()
 
-                if start_date == " ":
-                    sg.popup("Start Date  cannot be empty value")
+                if start_date == "":
+                    sg.popup("Start Date cannot be empty value")
                     continue
 
-                if end_date == " ":
+                if end_date == "":
                     sg.popup("End Date cannot be empty value")
                     continue
 
@@ -71,9 +71,10 @@ class InterfaceHandler:
              
     def ask_for_financial_movement(self ):
         today_date = date.today()
+        aux_date = today_date.strftime("%d-%m-%Y")
 
         layout = [
-            [sg.Text('Date: '),sg.Input(today_date, disabled=True)],
+            [sg.Text('Date: '),sg.InputText(key="-DATE-",default_text=aux_date)],
             [sg.Text('Cost: '), sg.InputText(key="-COST-")],
             [sg.Text('Movement Type:'), 
             sg.Radio("Income", "MOVEMENT", key="-INCOME-", default=True),
@@ -90,8 +91,13 @@ class InterfaceHandler:
                 return None
             
             if event == "Accept":
-                 cost = values["-COST-"]
+                 editable_date = values["-DATE-"]
 
+                 if editable_date == "":
+                     sg.popup("Date field is empty, Actual Date will be use instead of")
+                     editable_date = today_date
+
+                 cost = values["-COST-"]
 
                  if values["-INCOME-"]:
                     mv_type = 'ingreso'
@@ -112,7 +118,7 @@ class InterfaceHandler:
                  
                  window.close()
                  return {    
-                    "today_date": today_date,
+                    "today_date": editable_date,
                     "cost": new_cost,
                     "mv_type": mv_type
                 }
@@ -127,6 +133,7 @@ class InterfaceHandler:
             actions_handler.add_movement(movement)
 
         layout = [
+            [sg.Text("", key="-FILTERINFO-")],
             [sg.Table(
                 values=actions_handler.create_list(),
                 headings=headings,
@@ -152,7 +159,7 @@ class InterfaceHandler:
             if event == "Filter":
                 filter_data = self.ask_for_dates()
                 if filter_data is None:
-                    continue
+                    break
 
                 start_date = filter_data["start_date"]
                 end_date = filter_data["end_date"]
@@ -162,9 +169,8 @@ class InterfaceHandler:
                 window["-TABLE-"].update(values=[
                     [m.today_date.strftime("%d-%m-%Y"), m.category, m.cost, m.mv_type]
                     for m in filtered_movements])
-                 
-
-
+                
+                window["-FILTERINFO-"].update(f"Filtered from {start_date} to {end_date}")
 
             if event == "Add Movement":
                 category_data = self.ask_for_category()
