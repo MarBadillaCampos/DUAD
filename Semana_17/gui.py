@@ -1,5 +1,5 @@
 import FreeSimpleGUI as sg
-from datetime import date
+from datetime import date, datetime
 from movement import Movement
 from data import DataHandler
  
@@ -70,11 +70,11 @@ class InterfaceHandler:
 
              
     def ask_for_financial_movement(self ):
-        today_date = date.today()
-        aux_date = today_date.strftime("%d-%m-%Y")
+        today_date = date.today() #date
+        aux_date = today_date.strftime("%d-%m-%Y") #str
 
         layout = [
-            [sg.Text('Date: '),sg.InputText(key="-DATE-",default_text=aux_date)],
+            [sg.Text('Date: '),sg.InputText(key="-DATE-",default_text=aux_date)], #str
             [sg.Text('Cost: '), sg.InputText(key="-COST-")],
             [sg.Text('Movement Type:'), 
             sg.Radio("Income", "MOVEMENT", key="-INCOME-", default=True),
@@ -91,20 +91,33 @@ class InterfaceHandler:
                 return None
             
             if event == "Accept":
-                 editable_date = values["-DATE-"]
+                 editable_date = values["-DATE-"] #str
 
                  if editable_date == "":
-                     sg.popup("Date field is empty, Actual Date will be use instead of")
-                     editable_date = today_date
+                    sg.popup("The date field cannot be empty. It will be replaced with the current date by default")
+                    editable_date = aux_date
+
+                 try:
+                     data_time = datetime.strptime(editable_date, "%d-%m-%Y").date() #date
+                     aux_today_date = datetime.strptime(aux_date, "%d-%m-%Y").date() #date
+
+                     if data_time <= aux_today_date: # compare both dates
+                         str_date = data_time.strftime("%d-%m-%Y") 
+                         editable_date = str_date
+                     else:
+                         sg.popup('The entered date cannot be greater than the current date')
+                         continue
+
+                 except ValueError:
+                     sg.popup('Invalid Date')
+                     continue
 
                  cost = values["-COST-"]
 
-                 if values["-INCOME-"]:
-                    mv_type = 'ingreso'
-
-                 if values["-EXPENSE-"]:
-                     mv_type = 'gasto'
-
+                 if cost == "":
+                        sg.popup('Cost value is required if you want to track a new financial movement')
+                        continue
+                 
                  try:
                      new_cost = float(cost)
 
@@ -113,9 +126,15 @@ class InterfaceHandler:
                          continue
                   
                  except ValueError:
-                     sg.popup("Invalid input")
+                     sg.popup("Invalid input for cost")
                      continue
-                 
+
+                 if values["-INCOME-"]:
+                    mv_type = 'ingreso'
+
+                 if values["-EXPENSE-"]:
+                     mv_type = 'gasto'
+
                  window.close()
                  return {    
                     "today_date": editable_date,
