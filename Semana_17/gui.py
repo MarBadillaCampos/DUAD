@@ -147,7 +147,7 @@ class InterfaceHandler:
         headings = ["today_date", "category", "cost", "mv_type"]
         file = "./Semana_17/csv/financial_movements.csv"
 
-        movements = data_handler.load_movements(file)
+        movements = data_handler.load_movements(file) #revisar 
         for movement in movements:
             actions_handler.add_movement(movement)
 
@@ -162,7 +162,7 @@ class InterfaceHandler:
                 justification="center",
                 num_rows=10
             )],
-            [sg.Button("Add Movement"),sg.Button("Filter"), sg.Button("Cancel")],
+            [sg.Button("Add Movement"),sg.Button("Filter"), sg.Button("Cancel") , sg.Button("Export to CSV")],
         ]
 
         window = sg.Window("Movements Table", layout)
@@ -170,10 +170,18 @@ class InterfaceHandler:
         while True:
             event, values = window.read()
 
+            if event == "Export to CSV":
+                 income_list = data_handler.get_income_list(actions_handler.movement_list)
+                 income_value = actions_handler.get_total_income(income_list)
+                 data_handler.validate_data(file)
+                 new_list = actions_handler.movement_list
+                 data_handler.save_movements(file,new_list, str(income_value))
+
+                     
+
             if event == sg.WIN_CLOSED or event == "Cancel":
-                data_handler.validate_data(file)
-                data_handler.save_movements(file, actions_handler.movement_list)
-                break
+                window.close()
+                return None
             
             if event == "Filter":
                 filter_data = self.ask_for_dates()
@@ -210,6 +218,4 @@ class InterfaceHandler:
                 actions_handler.add_movement(new_movement)
                 
                 window["-TABLE-"].update(values=actions_handler.create_list())
-            
-
         window.close()

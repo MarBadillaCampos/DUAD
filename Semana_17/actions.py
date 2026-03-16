@@ -33,6 +33,18 @@ class actionHandler:
             if start_date <= movement.today_date <= end_date:
                 filtered_records.append(movement)
         return filtered_records
+    
+    def get_total_income(self, income_list):
+        total = 0
+        for income_value in income_list:
+            total = total + income_value.cost
+        return total
+
+
+
+    
+
+
 
           
     

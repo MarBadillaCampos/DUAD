@@ -10,15 +10,20 @@ class DataHandler:
     def validate_data(self,file_path):
             return os.path.exists(file_path)
     
-    def save_movements(self,file_path, movement):
+    def save_movements(self, file_path, movement_list, income_value):
         with open(file_path,'w',newline='', encoding='utf-8') as file:
             writer = csv.DictWriter(file, fieldnames=["today_date","category","cost","mv_type"])
 
             writer.writeheader()
-            
-            for movement in movement:
+            for movement in movement_list:
                 writer.writerow(movement.to_dict())
-    
+            
+            writer.writerow({
+                "today_date": "",
+                "category": "TOTAL INCOME",
+                "cost": income_value,
+                "mv_type": ""
+            })
 
     def read_movements(self,file_path):
         if self.validate_data(file_path):
@@ -50,3 +55,11 @@ class DataHandler:
             movements.append(movement)
 
         return movements
+    
+    def get_income_list(self, movement_list):
+        filtered_income_records = []
+
+        for movement in movement_list:
+            if movement.mv_type == 'ingreso':
+                filtered_income_records.append(movement)
+        return filtered_income_records
