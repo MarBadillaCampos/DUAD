@@ -39,6 +39,23 @@ class actionHandler:
         for income_value in income_list:
             total = total + income_value.cost
         return total
+    
+    def get_total_expense(self, expense_list):
+        total = 0
+        for expense_value in expense_list:
+            total = total + expense_value.cost
+        return total
+    
+    def get_profit_value(self,income,expense):
+        total = 0
+        if income != 0 and expense != 0:
+            total = income - expense
+        if income == 0:
+            total = expense
+        if expense == 0:
+            total = income
+        return total 
+
 
 
 

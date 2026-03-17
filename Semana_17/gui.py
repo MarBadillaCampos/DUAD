@@ -173,11 +173,13 @@ class InterfaceHandler:
             if event == "Export to CSV":
                  income_list = data_handler.get_income_list(actions_handler.movement_list)
                  income_value = actions_handler.get_total_income(income_list)
+                 expense_list = data_handler.get_expense_list(actions_handler.movement_list)
+                 expense_value = actions_handler.get_total_income(expense_list)
+                 profit = actions_handler.get_profit_value(income_value,expense_value)
                  data_handler.validate_data(file)
                  new_list = actions_handler.movement_list
-                 data_handler.save_movements(file,new_list, str(income_value))
+                 data_handler.save_movements(file,new_list, str(income_value), str(expense_value), str(profit))
 
-                     
 
             if event == sg.WIN_CLOSED or event == "Cancel":
                 window.close()
