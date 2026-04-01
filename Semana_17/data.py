@@ -12,7 +12,7 @@ class DataHandler:
     
     def save_movements(self, file_path, movement_list, income_value, expense_value, profit):
         with open(file_path,'w',newline='', encoding='utf-8') as file:
-            writer = csv.DictWriter(file, fieldnames=["today_date","category","cost","mv_type"])
+            writer = csv.DictWriter(file, fieldnames=["today_date","category_name","color","cost","mv_type"])
 
             writer.writeheader()
             for movement in movement_list:
@@ -48,14 +48,20 @@ class DataHandler:
             return []
 
         
-    def load_movements(self, file_path):
+    def load_movements(self, file_path, category_handler):
         data = self.read_movements(file_path)
         movements = []
+
         for row in data:
             if row["today_date"]: 
+                category = category_handler.check_category(
+                    row["category_name"],
+                    row["color"],
+                )
+
                 movement = Movement(
                     row["today_date"],
-                    row["category"],
+                    category,
                     row["cost"],
                     row["mv_type"]
                 )

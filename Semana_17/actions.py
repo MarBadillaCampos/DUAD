@@ -17,10 +17,11 @@ class actionHandler:
         aux_list = []
         for values in self.movement_list:
             today_date = values.today_date
-            category = values.category
+            category_name = values.category.category_name
+            color = values.category.color
             cost = values.cost
             mv_type = values.mv_type
-            new_list = [today_date,category,cost,mv_type]
+            new_list = [today_date,category_name,cost,mv_type]
             aux_list.append(new_list)
         return aux_list
     

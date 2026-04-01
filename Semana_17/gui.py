@@ -1,6 +1,7 @@
 import FreeSimpleGUI as sg
 from datetime import date, datetime
 from movement import Movement
+from category import Category
 from data import DataHandler
  
 
@@ -12,11 +13,13 @@ class InterfaceHandler:
 
     def ask_for_category(self):
         layout = [[sg.Text("Add your Category Name"),sg.InputText(key="-CATEGORY-")],
+                  [sg.ColorChooserButton("Choose A Color"),sg.InputText(key="-COLOR-")],
                   [sg.Text('Do you want to continue with the process?')],
-                  [sg.Button("Accept"), sg.Button("Cancel")]
+                  [sg.Button("Accept"), sg.Button("Cancel")],
                   ]
 
         window = sg.Window("Category", layout)
+        color = None
 
         while True:
             event, values = window.read()
@@ -26,6 +29,7 @@ class InterfaceHandler:
             
             if event == "Accept":
                 category = values["-CATEGORY-"].strip()
+                color = values["-COLOR-"] or "gray"
                 if category == "":
                     sg.popup("Category name cannot be empty value")
                     continue
@@ -35,7 +39,10 @@ class InterfaceHandler:
                      continue
 
                 window.close()
-                return category
+                return  {    
+                    "category_name": category,
+                    "color": color}
+
             
     def ask_for_dates(self):
         layout = [[sg.Text("Start Date"),sg.InputText(key="-STARTDATE-")],
@@ -143,11 +150,11 @@ class InterfaceHandler:
                 }
 
             
-    def display_information(self, actions_handler,data_handler):               
+    def display_information(self, actions_handler,data_handler,category_handler):               
         headings = ["today_date", "category", "cost", "mv_type"]
         file = "./Semana_17/csv/financial_movements.csv"
 
-        movements = data_handler.load_movements(file) #revisar 
+        movements = data_handler.load_movements(file,category_handler) 
         for movement in movements:
             actions_handler.add_movement(movement)
 
@@ -160,7 +167,8 @@ class InterfaceHandler:
                 auto_size_columns=False,
                 col_widths=[15, 20, 10, 10],
                 justification="center",
-                num_rows=10
+                num_rows=10,
+                row_colors=[]
             )],
             [sg.Button("Add Movement"),sg.Button("Filter"), sg.Button("Cancel") , sg.Button("Export to CSV")],
         ]
@@ -210,14 +218,26 @@ class InterfaceHandler:
                 if mv_data is None:
                     continue
 
+                category = category_handler.check_category(category_data["category_name"],category_data["color"])
+
+
                 new_movement = Movement(
                     mv_data["today_date"],
-                    category_data,
+                    category,
                     mv_data["cost"],
                     mv_data["mv_type"]
                 )
 
                 actions_handler.add_movement(new_movement)
+
                 
                 window["-TABLE-"].update(values=actions_handler.create_list())
+
+                row_colors = []
+
+                for i, movement in enumerate(actions_handler.movement_list):
+                    row_colors.append((i, "white", movement.category.color))
+
+                window["-TABLE-"].update(row_colors=row_colors)
+
         window.close()

@@ -12,7 +12,8 @@ class Movement:
     def display(self):
         print(
             f"today_date: {self.today_date} | "
-            f"category: {self.category} | "
+            f"category_name: {self.category.category_name} | "
+            f"color: {self.category.color} | "
             f"cost: {self.cost} | "
             f"mv_Type: {self.mv_type}"
         )
@@ -20,7 +21,8 @@ class Movement:
     def to_dict(self):
         return {
             "today_date": self.today_date.strftime("%d-%m-%Y"), #date to String 
-            "category": self.category,
+            "category_name": self.category.category_name,
+            "color": self.category.color,
             "cost": self.cost,
             "mv_type": self.mv_type
         }

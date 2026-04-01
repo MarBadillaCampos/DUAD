@@ -1,21 +1,7 @@
-today_date,category,cost,mv_type
-22-02-2026,Comida,1000.0,gasto
-22-02-2026,cable,1200.0,gasto
-23-02-2026,Transporte,1500.0,gasto
-23-02-2026,Comida,1500.0,gasto
-25-02-2026,Moto,2500.0,gasto
-25-02-2026,TV,1500.0,gasto
-03-03-2026,Bono,5000.0,ingreso
-03-03-2026,cable,1500.0,gasto
-05-03-2026,Carro,5000.0,gasto
-04-03-2026,Salario,10000.0,ingreso
-11-03-2026,Libro,7500.0,gasto
-15-03-2026,Comida,1500.0,ingreso
-05-02-2026,Computadora,1500.0,gasto
-17-03-2026,test,10000.0,ingreso
-17-03-2026,testdos,1000.0,ingreso
+today_date,category_name,color,cost,mv_type
+31-03-2026,comida,#a0a0a0,1500.0,ingreso
 
 Totals
-Income: 27500.0
-Expense: 24700.0
-Net prof: 2800.0
+Income: 1500.0
+Expense: 0
+Net prof: 1500.0
