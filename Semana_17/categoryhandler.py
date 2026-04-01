@@ -9,7 +9,9 @@ class categoryHandler:
         category_name = category_name.strip().lower()
 
         if category_name in self.category_color:
-            return self.category_color[category_name]
+            category =  self.category_color[category_name]
+            category.color = color
+            return category
         
         new_category = Category(category_name,color)
         self.category_color[category_name] = new_category

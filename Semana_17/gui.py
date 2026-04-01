@@ -13,23 +13,26 @@ class InterfaceHandler:
 
     def ask_for_category(self):
         layout = [[sg.Text("Add your Category Name"),sg.InputText(key="-CATEGORY-")],
-                  [sg.ColorChooserButton("Choose A Color"),sg.InputText(key="-COLOR-")],
+                  [sg.Input(key="-COLOR-", visible=False),
+                  sg.ColorChooserButton("Choose A Color", target="-COLOR-")],
                   [sg.Text('Do you want to continue with the process?')],
                   [sg.Button("Accept"), sg.Button("Cancel")],
                   ]
 
         window = sg.Window("Category", layout)
-        color = None
 
         while True:
             event, values = window.read()
+
             if event == sg.WIN_CLOSED or event == 'Cancel':
                 window.close()
                 return None
             
             if event == "Accept":
+
                 category = values["-CATEGORY-"].strip()
-                color = values["-COLOR-"] or "gray"
+                color =values["-COLOR-"] or "gray"
+
                 if category == "":
                     sg.popup("Category name cannot be empty value")
                     continue
@@ -173,8 +176,16 @@ class InterfaceHandler:
             [sg.Button("Add Movement"),sg.Button("Filter"), sg.Button("Cancel") , sg.Button("Export to CSV")],
         ]
 
-        window = sg.Window("Movements Table", layout)
+        window = sg.Window("Movements Table", layout,finalize=True)
 
+        row_colors = []
+
+        for i, movement in enumerate(actions_handler.movement_list):
+            row_colors.append((i, "white", movement.category.color))
+
+        window["-TABLE-"].update(row_colors=row_colors)
+
+        
         while True:
             event, values = window.read()
 
@@ -204,8 +215,14 @@ class InterfaceHandler:
                 filtered_movements = actions_handler.filter_by_date(start_date, end_date)
 
                 window["-TABLE-"].update(values=[
-                    [m.today_date.strftime("%d-%m-%Y"), m.category, m.cost, m.mv_type]
+                    [m.today_date.strftime("%d-%m-%Y"), m.category.category_name, m.cost, m.mv_type]
                     for m in filtered_movements])
+                
+                row_colors = []
+                for i, m in enumerate(filtered_movements):
+                    row_colors.append((i, "white", m.category.color))
+
+                window["-TABLE-"].update(row_colors=row_colors)
                 
                 window["-FILTERINFO-"].update(f"Filtered from {start_date} to {end_date}")
 
@@ -229,15 +246,12 @@ class InterfaceHandler:
                 )
 
                 actions_handler.add_movement(new_movement)
-
                 
                 window["-TABLE-"].update(values=actions_handler.create_list())
 
                 row_colors = []
-
                 for i, movement in enumerate(actions_handler.movement_list):
                     row_colors.append((i, "white", movement.category.color))
 
                 window["-TABLE-"].update(row_colors=row_colors)
-
         window.close()
