@@ -12,7 +12,5 @@ def main():
     gui_handler.display_information(actions_handler, data_handler,category_handler)
     
 
-
-
 if __name__ == '__main__':
     main()

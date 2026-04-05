@@ -46,8 +46,9 @@ class InterfaceHandler:
                     "category_name": category,
                     "color": color}
 
-            
+
     def ask_for_dates(self):
+
         layout = [[sg.Text("Start Date"),sg.InputText(key="-STARTDATE-")],
                   [sg.Text("End Date"),sg.InputText(key="-ENDDATE-")],
                   [sg.Button("Accept"), sg.Button("Cancel")]
@@ -65,19 +66,35 @@ class InterfaceHandler:
                 start_date = values["-STARTDATE-"].strip()
                 end_date = values["-ENDDATE-"].strip()
 
+
                 if start_date == "":
                     sg.popup("Start Date cannot be empty value")
                     continue
 
                 if end_date == "":
                     sg.popup("End Date cannot be empty value")
+                    continue 
+                try:
+                    start_date_obj = datetime.strptime(start_date, "%d-%m-%Y").date()
+                except ValueError:
+                    sg.popup("Start Date must be in format DD-MM-YYYY")
+                    continue
+
+                try:
+                    end_date_obj = datetime.strptime(end_date, "%d-%m-%Y").date()
+                except ValueError:
+                    sg.popup("End Date must be in format DD-MM-YYYY")
+                    continue
+
+                if start_date_obj > end_date_obj:
+                    sg.popup("Start Date cannot be after End Date")
                     continue
 
                 window.close()
                 return  {    
-                    "start_date": start_date,
-                    "end_date": end_date}
-
+                    "start_date": start_date_obj,
+                    "end_date": end_date_obj}
+                
              
     def ask_for_financial_movement(self ):
         today_date = date.today() #date
@@ -206,6 +223,7 @@ class InterfaceHandler:
             
             if event == "Filter":
                 filter_data = self.ask_for_dates()
+                
                 if filter_data is None:
                     break
 

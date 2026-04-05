@@ -21,14 +21,11 @@ class actionHandler:
             color = values.category.color
             cost = values.cost
             mv_type = values.mv_type
-            new_list = [today_date,category_name,cost,mv_type]
+            new_list = [today_date,category_name,color,cost,mv_type]
             aux_list.append(new_list)
         return aux_list
     
     def filter_by_date(self, start_date, end_date):
-        start_date = datetime.strptime(start_date, "%d-%m-%Y").date()
-        end_date = datetime.strptime(end_date, "%d-%m-%Y").date()
-
         filtered_records = []
         for movement in self.movement_list:
             if start_date <= movement.today_date <= end_date:

@@ -1,11 +1,11 @@
 from actions import actionHandler
-import unittest
 from unittest.mock import mock_open, patch
 from data import DataHandler
 from categoryhandler import categoryHandler
 from movement import Movement
 from datetime import datetime
-import pytest
+from category import Category
+
 
 class MockMovement:
     def __init__(self,today_date,category,cost,mv_type):
@@ -120,13 +120,6 @@ def test_load_movements(tmp_path):
      assert result[0].cost == 1000.0
      assert result[0].mv_type == 'ingreso'
 
-
-csv_content_sec= """today_date,category_name,color,cost,mv_type
-20-03-2026,food,red,1000,ingreso
-20-03-2026,transporte,blue,500,ingreso
-20-03-2026,Bonus,green,5000,
-"""
-
 def test_filter_by_date():
 
     expense_list = [
@@ -136,10 +129,10 @@ def test_filter_by_date():
         MockMovement(datetime.strptime("08-03-2026", "%d-%m-%Y").date(), MockCategory("Helados", "green"),6000, 'ingreso'),
         MockMovement(datetime.strptime("15-04-2026", "%d-%m-%Y").date(), MockCategory("Libro", "purple"),1500, 'gasto'),
 
-
     ]
-    start_date = "15-02-2026"
-    end_date = "08-03-2026"
+    start_date = datetime.strptime("15-02-2026", "%d-%m-%Y").date()
+    end_date = datetime.strptime("08-03-2026", "%d-%m-%Y").date() 
+
 
     ac_handler = actionHandler()
     ac_handler.movement_list = expense_list
@@ -147,17 +140,54 @@ def test_filter_by_date():
 
     assert len(result) == 3
 
+def test_filter_by_date_no_results():
+    expense_list = [
+        MockMovement(datetime.strptime("01-01-2026", "%d-%m-%Y").date(), MockCategory("Computadora", "green"), 100, 'gasto'),
+    ]
+    start_date = datetime.strptime("01-02-2026", "%d-%m-%Y").date()
+    end_date = datetime.strptime("10-02-2026", "%d-%m-%Y").date() 
+
+    ac_handler = actionHandler()
+    ac_handler.movement_list = expense_list
+
+    
+
+    result = ac_handler.filter_by_date(start_date, end_date)
+
+    assert result == []
+
+def test_filter_by_date_all_outside_range():
+    expense_list = [
+        MockMovement(datetime.strptime("01-01-2026", "%d-%m-%Y").date(), MockCategory("Libro", "blue"), 100, 'gasto'),
+        MockMovement(datetime.strptime("02-01-2026", "%d-%m-%Y").date(), MockCategory("Zapatos", "red"), 200, 'gasto'),
+    ]
+
+    start_date = datetime.strptime("01-02-2026", "%d-%m-%Y").date()
+    end_date = datetime.strptime("10-02-2026", "%d-%m-%Y").date() 
+
+    ac_handler = actionHandler()
+    ac_handler.movement_list = expense_list
+
+    result = ac_handler.filter_by_date(start_date, end_date)
+
+    assert len(result) == 0
 
 
-#def filter_by_date(self, start_date, end_date):
- #       start_date = datetime.strptime(start_date, "%d-%m-%Y").date()
-  #      end_date = datetime.strptime(end_date, "%d-%m-%Y").date()
+def test_check_category():
+        color = "green"
+        category_name = "COMIDA"
 
-  #      filtered_records = []
-  #      for movement in self.movement_list:
-   #         if start_date <= movement.today_date <= end_date:
-     #           filtered_records.append(movement)
-      #  return filtered_records
+        category_aux = categoryHandler()
+        assert not category_aux.category_color
+        result = category_aux.check_category(category_name,color)
+
+        assert isinstance(result, Category)
+        assert result.category_name == "comida"
+        assert "comida" in category_aux.category_color
+        assert category_aux.category_color["comida"] is result
+
+
+ 
 
 
 

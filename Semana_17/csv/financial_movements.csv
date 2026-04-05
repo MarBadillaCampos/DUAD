@@ -1,15 +1,19 @@
 today_date,category_name,color,cost,mv_type
-01-04-2026,comida,#ff0000,2000.0,gasto
+01-04-2026,comida,gray,2000.0,gasto
 22-03-2026,gasolina,#0080c0,2500.0,gasto
-05-02-2026,bono,#008000,10000.0,ingreso
+05-02-2026,bono,gray,10000.0,ingreso
 01-04-2026,postre,#ff8080,1500.0,gasto
 01-04-2026,lentes oscuros,gray,500.0,gasto
 20-03-2026,cargador,gray,1000.0,gasto
 01-04-2026,cargador,gray,1500.0,gasto
 02-01-2026,galletas,#008080,1000.0,gasto
 01-04-2026,computadora,#808000,1700.0,ingreso
+05-04-2026,libro,#804000,1500.0,gasto
+05-04-2026,comida,gray,2500.0,gasto
+05-04-2026,bono,gray,1000.0,ingreso
+05-04-2026,internet,#00ffff,1500.0,gasto
 
 Totals
-Income: 11700.0
-Expense: 10000.0
-Net prof: 1700.0
+Income: 12700.0
+Expense: 15500.0
+Net prof: -2800.0
