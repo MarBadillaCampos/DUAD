@@ -2,35 +2,49 @@ from actions import actionHandler
 import unittest
 from unittest.mock import mock_open, patch
 from data import DataHandler
+from categoryhandler import categoryHandler
+from movement import Movement
+from datetime import datetime
 import pytest
 
 class MockMovement:
-    def __init__(self, cost):
+    def __init__(self,today_date,category,cost,mv_type):
+        self.today_date = today_date
+        self.category = category
         self.cost = cost
+        self.mv_type = mv_type
+
+
+class MockCategory:
+    def __init__(self,category_name, color):
+        self.category_name = category_name
+        self.color = color 
 
 
 def test_get_total_income():
+
     income_list = [
-        MockMovement(1500),
-        MockMovement(2000),
-        MockMovement(500)
+        MockMovement("01-04-2026", MockCategory("Comida", "grey"),5000, 'ingreso'),
+        MockMovement("01-04-2026", MockCategory("Transporte", "green"),2000, 'ingreso'),
+        MockMovement("01-04-2026", MockCategory("Gasolina", "blue"),100, 'ingreso'),
     ]
 
     ac_handler = actionHandler()
     result = ac_handler.get_total_income(income_list)
 
-    assert result == 4000
+    assert result == 7100
 
 def test_get_total_expense():
+
     expense_list = [
-        MockMovement(100),
-        MockMovement(200),
-        MockMovement(3000)
+        MockMovement("15-02-2026", MockCategory("Comida", "grey"),2500, 'gasto'),
+        MockMovement("25-01-2026", MockCategory("Transporte", "green"),1000, 'gasto'),
+        MockMovement("08-03-2026", MockCategory("Gasolina", "blue"),6000, 'gasto'),
     ]
     ac_handler = actionHandler()
     result = ac_handler.get_total_expense(expense_list)
 
-    assert result == 3300
+    assert result == 9500
 
 def test_get_profit():
     expense = 4000
@@ -68,9 +82,96 @@ def test_save_movements():
     assert "Net prof: 1500" in written_content
 
 
-def test_financial_movements_file_not_found():
-    data_handler = DataHandler()
+csv_content = """today_date,category_name,color,cost,mv_type
+2024-01-01,food,red,1000,ingreso
+2024-01-02,food,blue,abc,ingreso
+2024-01-03,food,green,500,
+"""
 
-    with patch("builtins.open", side_effect=FileNotFoundError):
-        with pytest.raises(FileNotFoundError):
-            data_handler.validate_data("no_fake_file.csv")
+
+def test_validate_content(tmp_path):
+    path = tmp_path / "test.csv"
+
+    with open(path, "w") as f:
+        f.write(csv_content)    
+    data_handler = DataHandler()
+    result = data_handler.read_movements(path)
+    assert len(result) == 1
+    assert  result[0]["cost"] == 1000.0
+    assert isinstance(result[0]["cost"],float)
+
+csv_content_sec= """today_date,category_name,color,cost,mv_type
+20-03-2026,food,red,1000,ingreso
+20-03-2026,transporte,blue,500,ingreso
+20-03-2026,Bonus,green,5000,
+"""
+
+def test_load_movements(tmp_path):
+     path = tmp_path / "test.csv"
+
+     with open(path, "w") as f:
+        f.write(csv_content_sec)    
+     data_handler = DataHandler()
+     category_handler = categoryHandler()
+     result = data_handler.load_movements(path, category_handler)
+
+     assert len(result) == 2
+     assert isinstance(result[0], Movement)
+     assert result[0].cost == 1000.0
+     assert result[0].mv_type == 'ingreso'
+
+
+csv_content_sec= """today_date,category_name,color,cost,mv_type
+20-03-2026,food,red,1000,ingreso
+20-03-2026,transporte,blue,500,ingreso
+20-03-2026,Bonus,green,5000,
+"""
+
+def test_filter_by_date():
+
+    expense_list = [
+        MockMovement(datetime.strptime("15-01-2026", "%d-%m-%Y").date(), MockCategory("Comida", "grey"),2500, 'gasto'),
+        MockMovement(datetime.strptime("25-02-2026", "%d-%m-%Y").date(), MockCategory("Transporte", "green"),1000, 'gasto'),
+        MockMovement(datetime.strptime("15-02-2026", "%d-%m-%Y").date(), MockCategory("Gasolina", "blue"),10000, 'gasto'),
+        MockMovement(datetime.strptime("08-03-2026", "%d-%m-%Y").date(), MockCategory("Helados", "green"),6000, 'ingreso'),
+        MockMovement(datetime.strptime("15-04-2026", "%d-%m-%Y").date(), MockCategory("Libro", "purple"),1500, 'gasto'),
+
+
+    ]
+    start_date = "15-02-2026"
+    end_date = "08-03-2026"
+
+    ac_handler = actionHandler()
+    ac_handler.movement_list = expense_list
+    result = ac_handler.filter_by_date(start_date,end_date)
+
+    assert len(result) == 3
+
+
+
+#def filter_by_date(self, start_date, end_date):
+ #       start_date = datetime.strptime(start_date, "%d-%m-%Y").date()
+  #      end_date = datetime.strptime(end_date, "%d-%m-%Y").date()
+
+  #      filtered_records = []
+  #      for movement in self.movement_list:
+   #         if start_date <= movement.today_date <= end_date:
+     #           filtered_records.append(movement)
+      #  return filtered_records
+
+
+
+
+
+     
+
+
+
+
+
+
+
+    
+
+
+        

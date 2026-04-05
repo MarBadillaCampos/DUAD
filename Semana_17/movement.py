@@ -15,7 +15,7 @@ class Movement:
             f"category_name: {self.category.category_name} | "
             f"color: {self.category.color} | "
             f"cost: {self.cost} | "
-            f"mv_Type: {self.mv_type}"
+            f"mv_type: {self.mv_type}"
         )
     
     def to_dict(self):
