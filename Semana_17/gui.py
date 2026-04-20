@@ -96,13 +96,14 @@ class InterfaceHandler:
                     "end_date": end_date_obj}
                 
              
-    def ask_for_financial_movement(self ):
+    def ask_for_financial_movement(self,category_list ):
         today_date = date.today() #date
         aux_date = today_date.strftime("%d-%m-%Y") #str
 
         layout = [
             [sg.Text('Date: '),sg.InputText(key="-DATE-",default_text=aux_date)], #str
             [sg.Text('Cost: '), sg.InputText(key="-COST-")],
+            [sg.Text('Category:'), sg.Combo(category_list, key="-CATEGORY-",readonly=True)],
             [sg.Text('Movement Type:'), 
             sg.Radio("Income", "MOVEMENT", key="-INCOME-", default=True),
             sg.Radio("Expense", "MOVEMENT", key="-EXPENSE-")],
@@ -118,6 +119,13 @@ class InterfaceHandler:
                 return None
             
             if event == "Accept":
+                 
+                 selected_category = values["-CATEGORY-"]
+
+                 if not selected_category:
+                    sg.popup("You must select a category")
+                    continue
+                
                  editable_date = values["-DATE-"] #str
 
                  if editable_date == "":
@@ -165,6 +173,7 @@ class InterfaceHandler:
                  window.close()
                  return {    
                     "today_date": editable_date,
+                    "category_name": selected_category,
                     "cost": new_cost,
                     "mv_type": mv_type
                 }
@@ -190,7 +199,7 @@ class InterfaceHandler:
                 num_rows=10,
                 row_colors=[]
             )],
-            [sg.Button("Add Movement"),sg.Button("Filter"), sg.Button("Cancel") , sg.Button("Export to CSV")],
+            [sg.Button("Add Movement"),sg.Button("Add Category"),sg.Button("Filter"), sg.Button("Cancel") , sg.Button("Export to CSV")],
         ]
 
         window = sg.Window("Movements Table", layout,finalize=True)
@@ -221,6 +230,17 @@ class InterfaceHandler:
                 window.close()
                 return None
             
+            if event == "Add Category":
+                category_data = self.ask_for_category()
+
+                if category_data is None:
+                    continue
+
+                category_handler.check_category(
+                    category_data["category_name"],
+                    category_data["color"]
+                )
+            
             if event == "Filter":
                 filter_data = self.ask_for_dates()
                 
@@ -245,16 +265,18 @@ class InterfaceHandler:
                 window["-FILTERINFO-"].update(f"Filtered from {start_date} to {end_date}")
 
             if event == "Add Movement":
-                category_data = self.ask_for_category()
-                if category_data is None:
+
+                if not category_handler.category_color:
+                    sg.popup("You must create at least one category first")
                     continue
 
-                mv_data = self.ask_for_financial_movement()
+                category_list = list(category_handler.category_color.keys())
+                mv_data = self.ask_for_financial_movement(category_list)
+
                 if mv_data is None:
                     continue
 
-                category = category_handler.check_category(category_data["category_name"],category_data["color"])
-
+                category = category_handler.category_color[mv_data["category_name"]]
 
                 new_movement = Movement(
                     mv_data["today_date"],
