@@ -12,7 +12,7 @@ class DataHandler:
     
     def save_movements(self, file_path, movement_list, income_value, expense_value, profit):
         with open(file_path,'w',newline='', encoding='utf-8') as file:
-            writer = csv.DictWriter(file, fieldnames=["today_date","category_name","color","cost","mv_type"])
+            writer = csv.DictWriter(file, fieldnames=["today_date","category_name","color","cost","mv_type", "description"])
 
             writer.writeheader()
             for movement in movement_list:
@@ -63,7 +63,8 @@ class DataHandler:
                     row["today_date"],
                     category,
                     row["cost"],
-                    row["mv_type"]
+                    row["mv_type"],
+                    row["description"]
                 )
                 movements.append(movement)
 

@@ -103,10 +103,11 @@ class InterfaceHandler:
         layout = [
             [sg.Text('Date: '),sg.InputText(key="-DATE-",default_text=aux_date)], #str
             [sg.Text('Cost: '), sg.InputText(key="-COST-")],
-            [sg.Text('Category:'), sg.Combo(category_list, key="-CATEGORY-",readonly=True)],
+            [sg.Text('Category:'), sg.Combo(category_list, key="-CATEGORY-")],
             [sg.Text('Movement Type:'), 
             sg.Radio("Income", "MOVEMENT", key="-INCOME-", default=True),
             sg.Radio("Expense", "MOVEMENT", key="-EXPENSE-")],
+            [sg.Text('Description: '), sg.InputText(key="-DESCRIPTION-")],
             [sg.Button("Accept"), sg.Button("Cancel")]
         ]
 
@@ -169,18 +170,24 @@ class InterfaceHandler:
 
                  if values["-EXPENSE-"]:
                      mv_type = 'gasto'
+                 
+                 desc = values["-DESCRIPTION-"]
+
+                 if desc == "":
+                     sg.popup("Description value is required if you want to track a new financial movement")
 
                  window.close()
                  return {    
                     "today_date": editable_date,
                     "category_name": selected_category,
                     "cost": new_cost,
-                    "mv_type": mv_type
+                    "mv_type": mv_type,
+                    "description": desc
                 }
 
             
     def display_information(self, actions_handler,data_handler,category_handler):               
-        headings = ["today_date", "category", "cost", "mv_type"]
+        headings = ["today_date", "category", "color", "cost", "mv_type", "description"]
         file = "./Semana_17/csv/financial_movements.csv"
 
         movements = data_handler.load_movements(file,category_handler) 
@@ -194,7 +201,7 @@ class InterfaceHandler:
                 headings=headings,
                 key="-TABLE-",
                 auto_size_columns=False,
-                col_widths=[15, 20, 10, 10],
+                col_widths=[15, 20, 10, 10, 10],
                 justification="center",
                 num_rows=10,
                 row_colors=[]
@@ -282,7 +289,8 @@ class InterfaceHandler:
                     mv_data["today_date"],
                     category,
                     mv_data["cost"],
-                    mv_data["mv_type"]
+                    mv_data["mv_type"],
+                    mv_type=["description"]
                 )
 
                 actions_handler.add_movement(new_movement)

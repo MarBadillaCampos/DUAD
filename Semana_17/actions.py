@@ -21,7 +21,8 @@ class actionHandler:
             color = values.category.color
             cost = values.cost
             mv_type = values.mv_type
-            new_list = [today_date,category_name,color,cost,mv_type]
+            description = values.description
+            new_list = [today_date,category_name,color,cost,mv_type,description]
             aux_list.append(new_list)
         return aux_list
     

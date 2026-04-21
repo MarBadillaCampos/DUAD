@@ -1,18 +1,18 @@
-today_date,category_name,color,cost,mv_type
-01-04-2026,comida,gray,2000.0,gasto
-22-03-2026,gasolina,#0080c0,2500.0,gasto
-05-02-2026,bono,gray,10000.0,ingreso
-01-04-2026,postre,#ff8080,1500.0,gasto
-01-04-2026,lentes oscuros,gray,500.0,gasto
-20-03-2026,cargador,gray,1000.0,gasto
-01-04-2026,cargador,gray,1500.0,gasto
-02-01-2026,galletas,#008080,1000.0,gasto
-01-04-2026,computadora,#808000,1700.0,ingreso
-05-04-2026,libro,#804000,1500.0,gasto
-05-04-2026,comida,gray,2500.0,gasto
-05-04-2026,bono,gray,1000.0,ingreso
-05-04-2026,internet,#00ffff,1500.0,gasto
-19-04-2026,test,#8080c0,1500.0,gasto
+today_date,category_name,color,cost,mv_type,description
+01-04-2026,comida,gray,2000.0,gasto,cantones
+22-03-2026,gasolina,#0080c0,2500.0,gasto,super
+05-02-2026,bono,gray,10000.0,ingreso,desempeño
+01-04-2026,postre,#ff8080,1500.0,gasto,pastel
+01-04-2026,lentes oscuros,gray,500.0,gasto,para manejar
+20-03-2026,cargador,gray,1000.0,gasto,cargador nuevo
+01-04-2026,cargador,gray,1500.0,gasto,reparacion
+02-01-2026,galletas,#008080,1000.0,gasto,chocolate
+01-04-2026,computadora,#808000,1700.0,ingreso,macbook
+05-04-2026,libro,#804000,1500.0,gasto,universitario
+05-04-2026,comida,gray,2500.0,gasto,hamburguesa
+05-04-2026,bono,gray,1000.0,ingreso, desempeño
+05-04-2026,internet,#00ffff,1500.0,gasto,pago mensual
+19-04-2026,test,#8080c0,1500.0,gasto, test
 
 Totals
 Income: 12700.0

@@ -1,6 +1,6 @@
 from datetime import datetime
 class Movement:
-    def __init__(self,today_date,category,cost,mv_type):
+    def __init__(self,today_date,category,cost,mv_type,description):
         if isinstance(today_date, str):
             self.today_date = datetime.strptime(today_date, "%d-%m-%Y").date()
         else:
@@ -8,6 +8,7 @@ class Movement:
         self.category = category
         self.cost = cost
         self.mv_type = mv_type
+        self.description = description
     
     def display(self):
         print(
@@ -15,7 +16,9 @@ class Movement:
             f"category_name: {self.category.category_name} | "
             f"color: {self.category.color} | "
             f"cost: {self.cost} | "
-            f"mv_type: {self.mv_type}"
+            f"mv_type: {self.mv_type} | "
+            f"description: {self.description} "
+
         )
     
     def to_dict(self):
@@ -24,5 +27,6 @@ class Movement:
             "category_name": self.category.category_name,
             "color": self.category.color,
             "cost": self.cost,
-            "mv_type": self.mv_type
+            "mv_type": self.mv_type,
+            "description" : self.description
         }
