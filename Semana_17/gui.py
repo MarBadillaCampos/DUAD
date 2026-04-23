@@ -94,7 +94,40 @@ class InterfaceHandler:
                 return  {    
                     "start_date": start_date_obj,
                     "end_date": end_date_obj}
-                
+            
+    def validate_cost(self, cost):
+        if cost == "":
+            return "Cost is required",None
+
+        try:
+            new_cost = float(cost)
+            if new_cost <= 0:
+                return "Cost must be greater than 0",None
+        except ValueError:
+            return "Invalid cost",None
+
+        return None, new_cost
+    
+    def validate_date(self, date_input):
+        today_date = date.today() #date
+        aux_date = today_date.strftime("%d-%m-%Y") #str
+
+        if date_input == "": #str
+                    return None, aux_date
+        try:
+                     data_time = datetime.strptime(date_input, "%d-%m-%Y").date() #date
+                     aux_today_date = datetime.strptime(aux_date, "%d-%m-%Y").date() #date
+
+                     if data_time <= aux_today_date: # compare both dates
+                         str_date = data_time.strftime("%d-%m-%Y") 
+                         return None, str_date
+                     else:
+                         return 'The entered date cannot be greater than the current date', None
+
+        except ValueError:
+            return 'Invalid Date',None
+        
+        return None, date_input
              
     def ask_for_financial_movement(self,category_list ):
         today_date = date.today() #date
@@ -127,43 +160,18 @@ class InterfaceHandler:
                     sg.popup("You must select a category")
                     continue
                 
-                 editable_date = values["-DATE-"] #str
 
-                 if editable_date == "":
-                    sg.popup("The date field cannot be empty. It will be replaced with the current date by default")
-                    editable_date = aux_date
-
-                 try:
-                     data_time = datetime.strptime(editable_date, "%d-%m-%Y").date() #date
-                     aux_today_date = datetime.strptime(aux_date, "%d-%m-%Y").date() #date
-
-                     if data_time <= aux_today_date: # compare both dates
-                         str_date = data_time.strftime("%d-%m-%Y") 
-                         editable_date = str_date
-                     else:
-                         sg.popup('The entered date cannot be greater than the current date')
-                         continue
-
-                 except ValueError:
-                     sg.popup('Invalid Date')
-                     continue
-
-                 cost = values["-COST-"]
-
-                 if cost == "":
-                        sg.popup('Cost value is required if you want to track a new financial movement')
-                        continue
+                 error, new_date = self.validate_date(values["-DATE-"])
+                 if error:
+                    sg.popup(error)
+                    continue
                  
-                 try:
-                     new_cost = float(cost)
+                 window["-DATE-"].update(new_date)
 
-                     if  new_cost <= 0:
-                         sg.popup("Cost must be greater than 0")
-                         continue
-                  
-                 except ValueError:
-                     sg.popup("Invalid input for cost")
-                     continue
+                 error, new_cost = self.validate_cost(values["-COST-"])
+                 if error:
+                    sg.popup(error)
+                    continue
 
                  if values["-INCOME-"]:
                     mv_type = 'ingreso'
@@ -178,7 +186,7 @@ class InterfaceHandler:
 
                  window.close()
                  return {    
-                    "today_date": editable_date,
+                    "today_date": new_date,
                     "category_name": selected_category,
                     "cost": new_cost,
                     "mv_type": mv_type,
@@ -290,7 +298,7 @@ class InterfaceHandler:
                     category,
                     mv_data["cost"],
                     mv_data["mv_type"],
-                    mv_type=["description"]
+                    mv_data["description"]
                 )
 
                 actions_handler.add_movement(new_movement)
