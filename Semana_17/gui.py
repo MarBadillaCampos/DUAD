@@ -96,38 +96,53 @@ class InterfaceHandler:
                     "end_date": end_date_obj}
             
     def validate_cost(self, cost):
-        if cost == "":
-            return "Cost is required",None
-
+        if not cost:
+            raise ValueError("Cost is required")
         try:
             new_cost = float(cost)
-            if new_cost <= 0:
-                return "Cost must be greater than 0",None
         except ValueError:
-            return "Invalid cost",None
+            raise ValueError("Invalid cost")
+        
+        if new_cost <= 0:
+         raise ValueError("Cost must be greater than 0")
+        
+        return new_cost
 
-        return None, new_cost
     
     def validate_date(self, date_input):
         today_date = date.today() #date
-        aux_date = today_date.strftime("%d-%m-%Y") #str
 
-        if date_input == "": #str
-                    return None, aux_date
+        if not date_input: #str
+                    return today_date.strftime("%d-%m-%Y")
         try:
-                     data_time = datetime.strptime(date_input, "%d-%m-%Y").date() #date
-                     aux_today_date = datetime.strptime(aux_date, "%d-%m-%Y").date() #date
-
-                     if data_time <= aux_today_date: # compare both dates
-                         str_date = data_time.strftime("%d-%m-%Y") 
-                         return None, str_date
-                     else:
-                         return 'The entered date cannot be greater than the current date', None
-
+            date_obj = datetime.strptime(date_input, "%d-%m-%Y").date()
         except ValueError:
-            return 'Invalid Date',None
+            raise ValueError("Invalid Date format (DD-MM-YYYY)")
         
-        return None, date_input
+        if date_obj > today_date:
+                     raise ValueError("The entered date cannot be greater than today")
+        
+        return date_obj.strftime("%d-%m-%Y")
+    
+    def validate_category(self, category):
+
+        if not category:
+            raise ValueError("You must select a category")
+        return category
+    
+    def validate_description(self, description):
+        try:
+            if description == "":
+                raise ValueError("Description value is required if you want to track a new financial movement")
+ 
+            if not all(word.isalpha() for word in description.split("")):
+               raise ValueError("Only letters are allowed")
+            
+        except ValueError:
+            raise ValueError("Invalid Description")
+
+        return description
+
              
     def ask_for_financial_movement(self,category_list ):
         today_date = date.today() #date
@@ -154,36 +169,26 @@ class InterfaceHandler:
             
             if event == "Accept":
                  
-                 selected_category = values["-CATEGORY-"]
+                 try:
+                        new_date = self.validate_date(values["-DATE-"])
+                        window["-DATE-"].update(new_date)
+                        if not values["-DATE-"]:
+                            sg.popup("Date was empty, using today's date")
+                        new_cost = self.validate_cost(values["-COST-"])
+                        selected_category = self.validate_category(values["-CATEGORY-"])
 
-                 if not selected_category:
-                    sg.popup("You must select a category")
-                    continue
-                
+                        if values["-INCOME-"]:
+                            mv_type = "ingreso"
+                        
+                        if  values["-EXPENSE-"]:
+                            mv_type = "gasto"
+                        
+                        desc = self.validate_description(values["-CATEGORY-"])
 
-                 error, new_date = self.validate_date(values["-DATE-"])
-                 if error:
-                    sg.popup(error)
+                 except ValueError as e:
+                    sg.popup(str(e))
                     continue
                  
-                 window["-DATE-"].update(new_date)
-
-                 error, new_cost = self.validate_cost(values["-COST-"])
-                 if error:
-                    sg.popup(error)
-                    continue
-
-                 if values["-INCOME-"]:
-                    mv_type = 'ingreso'
-
-                 if values["-EXPENSE-"]:
-                     mv_type = 'gasto'
-                 
-                 desc = values["-DESCRIPTION-"]
-
-                 if desc == "":
-                     sg.popup("Description value is required if you want to track a new financial movement")
-
                  window.close()
                  return {    
                     "today_date": new_date,
