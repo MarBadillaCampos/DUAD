@@ -144,7 +144,7 @@ class InterfaceHandler:
         return description
 
              
-    def ask_for_financial_movement(self,category_list ):
+    def ask_for_financial_movement(self,category_list,forced_movement_type=None ):
         today_date = date.today() #date
         aux_date = today_date.strftime("%d-%m-%Y") #str
 
@@ -152,12 +152,19 @@ class InterfaceHandler:
             [sg.Text('Date: '),sg.InputText(key="-DATE-",default_text=aux_date)], #str
             [sg.Text('Cost: '), sg.InputText(key="-COST-")],
             [sg.Text('Category:'), sg.Combo(category_list, key="-CATEGORY-")],
-            [sg.Text('Movement Type:'), 
-            sg.Radio("Income", "MOVEMENT", key="-INCOME-", default=True),
-            sg.Radio("Expense", "MOVEMENT", key="-EXPENSE-")],
-            [sg.Text('Description: '), sg.InputText(key="-DESCRIPTION-")],
-            [sg.Button("Accept"), sg.Button("Cancel")]
         ]
+
+        if forced_movement_type is None: 
+            layout.append([sg.Text('Movement Type:'), 
+            sg.Radio("Income", "MOVEMENT", key="-INCOME-", default=True),
+            sg.Radio("Expense", "MOVEMENT", key="-EXPENSE-")])
+        else:
+            layout.append([sg.Text(f"Type: {forced_movement_type}")])
+        
+        layout += [ 
+            [sg.Text('Description: '), sg.InputText(key="-DESCRIPTION-")],
+            [sg.Button("Accept"), sg.Button("Cancel")]]
+        
 
         window = sg.Window("Financial Movement", layout)
         
@@ -177,13 +184,16 @@ class InterfaceHandler:
                         new_cost = self.validate_cost(values["-COST-"])
                         selected_category = self.validate_category(values["-CATEGORY-"])
 
-                        if values["-INCOME-"]:
-                            mv_type = "ingreso"
+                        if forced_movement_type:
+                            mv_type = forced_movement_type
+                        else:
+                            if values["-INCOME-"]:
+                                mv_type = "ingreso"
+                            
+                            if  values["-EXPENSE-"]:
+                                mv_type = "gasto"
                         
-                        if  values["-EXPENSE-"]:
-                            mv_type = "gasto"
-                        
-                        desc = self.validate_description(values["-CATEGORY-"])
+                        desc = self.validate_description(values["-DESCRIPTION-"])
 
                  except ValueError as e:
                     sg.popup(str(e))
@@ -197,8 +207,7 @@ class InterfaceHandler:
                     "mv_type": mv_type,
                     "description": desc
                 }
-
-            
+       
     def display_information(self, actions_handler,data_handler,category_handler):               
         headings = ["today_date", "category", "color", "cost", "mv_type", "description"]
         file = "./Semana_17/csv/financial_movements.csv"
@@ -219,7 +228,8 @@ class InterfaceHandler:
                 num_rows=10,
                 row_colors=[]
             )],
-            [sg.Button("Add Movement"),sg.Button("Add Category"),sg.Button("Filter"), sg.Button("Cancel") , sg.Button("Export to CSV")],
+            [sg.Button("Add Movement"),sg.Button("Add Category"),sg.Button("Filter"), 
+             sg.Button("Cancel"),sg.Button("Export to CSV"),sg.Button("Add Income"),sg.Button("Add Expense")],
         ]
 
         window = sg.Window("Movements Table", layout,finalize=True)
@@ -231,7 +241,7 @@ class InterfaceHandler:
 
         window["-TABLE-"].update(row_colors=row_colors)
 
-        
+       
         while True:
             event, values = window.read()
 
@@ -244,7 +254,6 @@ class InterfaceHandler:
                  data_handler.validate_data(file)
                  new_list = actions_handler.movement_list
                  data_handler.save_movements(file,new_list, str(income_value), str(expense_value), str(profit))
-
 
             if event == sg.WIN_CLOSED or event == "Cancel":
                 window.close()
@@ -259,7 +268,7 @@ class InterfaceHandler:
                 category_handler.check_category(
                     category_data["category_name"],
                     category_data["color"]
-                )
+                )   
             
             if event == "Filter":
                 filter_data = self.ask_for_dates()
@@ -283,15 +292,22 @@ class InterfaceHandler:
                 window["-TABLE-"].update(row_colors=row_colors)
                 
                 window["-FILTERINFO-"].update(f"Filtered from {start_date} to {end_date}")
+            
 
-            if event == "Add Movement":
-
+            if event in ("Add Movement", "Add Income", "Add Expense"):
                 if not category_handler.category_color:
                     sg.popup("You must create at least one category first")
                     continue
 
                 category_list = list(category_handler.category_color.keys())
-                mv_data = self.ask_for_financial_movement(category_list)
+
+                if event == "Add Movement":
+                        forced_movement_type = None
+                elif event == "Add Income":
+                        forced_movement_type = "ingreso"
+                else:
+                        forced_movement_type = "gasto"
+                mv_data = self.ask_for_financial_movement(category_list,forced_movement_type)
 
                 if mv_data is None:
                     continue
@@ -299,15 +315,15 @@ class InterfaceHandler:
                 category = category_handler.category_color[mv_data["category_name"]]
 
                 new_movement = Movement(
-                    mv_data["today_date"],
-                    category,
-                    mv_data["cost"],
-                    mv_data["mv_type"],
-                    mv_data["description"]
-                )
+                        mv_data["today_date"],
+                        category,
+                        mv_data["cost"],
+                        mv_data["mv_type"],
+                        mv_data["description"]
+                    )
 
                 actions_handler.add_movement(new_movement)
-                
+                    
                 window["-TABLE-"].update(values=actions_handler.create_list())
 
                 row_colors = []
@@ -315,4 +331,8 @@ class InterfaceHandler:
                     row_colors.append((i, "white", movement.category.color))
 
                 window["-TABLE-"].update(row_colors=row_colors)
+                  
         window.close()
+
+
+
