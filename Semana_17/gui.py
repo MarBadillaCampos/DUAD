@@ -135,13 +135,24 @@ class InterfaceHandler:
             if description == "":
                 raise ValueError("Description value is required if you want to track a new financial movement")
  
-            if not all(word.isalpha() for word in description.split("")):
+            if not all(word.isalpha() for word in description.split(" ")):
                raise ValueError("Only letters are allowed")
             
         except ValueError:
             raise ValueError("Invalid Description")
 
         return description
+    
+    def validate_save_functionality(self,data_handler,actions_handler,file):
+        income_list = data_handler.get_income_list(actions_handler.movement_list)
+        income_value = actions_handler.get_total_income(income_list)
+        expense_list = data_handler.get_expense_list(actions_handler.movement_list)
+        expense_value = actions_handler.get_total_income(expense_list)
+        profit = actions_handler.get_profit_value(income_value,expense_value)
+        data_handler.validate_data(file)
+        new_list = actions_handler.movement_list
+        data_handler.save_movements(file,new_list, str(income_value), str(expense_value), str(profit))
+    
 
              
     def ask_for_financial_movement(self,category_list,forced_movement_type=None ):
@@ -246,16 +257,10 @@ class InterfaceHandler:
             event, values = window.read()
 
             if event == "Export to CSV":
-                 income_list = data_handler.get_income_list(actions_handler.movement_list)
-                 income_value = actions_handler.get_total_income(income_list)
-                 expense_list = data_handler.get_expense_list(actions_handler.movement_list)
-                 expense_value = actions_handler.get_total_income(expense_list)
-                 profit = actions_handler.get_profit_value(income_value,expense_value)
-                 data_handler.validate_data(file)
-                 new_list = actions_handler.movement_list
-                 data_handler.save_movements(file,new_list, str(income_value), str(expense_value), str(profit))
+                self.validate_save_functionality(data_handler,actions_handler,file)
 
             if event == sg.WIN_CLOSED or event == "Cancel":
+                self.validate_save_functionality(data_handler,actions_handler,file)
                 window.close()
                 return None
             
@@ -282,7 +287,7 @@ class InterfaceHandler:
                 filtered_movements = actions_handler.filter_by_date(start_date, end_date)
 
                 window["-TABLE-"].update(values=[
-                    [m.today_date.strftime("%d-%m-%Y"), m.category.category_name, m.cost, m.mv_type]
+                    [m.today_date.strftime("%d-%m-%Y"), m.category.category_name, m.category.color, m.cost, m.mv_type, m.description]
                     for m in filtered_movements])
                 
                 row_colors = []
@@ -333,6 +338,8 @@ class InterfaceHandler:
                 window["-TABLE-"].update(row_colors=row_colors)
                   
         window.close()
+
+
 
 
 
