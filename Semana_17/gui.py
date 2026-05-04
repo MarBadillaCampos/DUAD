@@ -1,0 +1,345 @@
+import FreeSimpleGUI as sg
+from datetime import date, datetime
+from movement import Movement
+from category import Category
+from data import DataHandler
+ 
+
+
+class InterfaceHandler:
+
+    def __init__(self):
+        pass
+
+    def ask_for_category(self):
+        layout = [[sg.Text("Add your Category Name"),sg.InputText(key="-CATEGORY-")],
+                  [sg.Input(key="-COLOR-", visible=False),
+                  sg.ColorChooserButton("Choose A Color", target="-COLOR-")],
+                  [sg.Text('Do you want to continue with the process?')],
+                  [sg.Button("Accept"), sg.Button("Cancel")],
+                  ]
+
+        window = sg.Window("Category", layout)
+
+        while True:
+            event, values = window.read()
+
+            if event == sg.WIN_CLOSED or event == 'Cancel':
+                window.close()
+                return None
+            
+            if event == "Accept":
+
+                category = values["-CATEGORY-"].strip()
+                color =values["-COLOR-"] or "gray"
+
+                if category == "":
+                    sg.popup("Category name cannot be empty value")
+                    continue
+
+                if not all(word.isalpha() for word in category.split(" ")):
+                     sg.popup("Invalid input: numbers or special values are not allowed")
+                     continue
+
+                window.close()
+                return  {    
+                    "category_name": category,
+                    "color": color}
+
+
+    def ask_for_dates(self):
+
+        layout = [[sg.Text("Start Date"),sg.InputText(key="-STARTDATE-")],
+                  [sg.Text("End Date"),sg.InputText(key="-ENDDATE-")],
+                  [sg.Button("Accept"), sg.Button("Cancel")]
+                  ]
+
+        window = sg.Window("DATES", layout)
+
+        while True:
+            event, values = window.read()
+            if event == sg.WIN_CLOSED or event == 'Cancel':
+                window.close()
+                return None
+            
+            if event == "Accept":
+                start_date = values["-STARTDATE-"].strip()
+                end_date = values["-ENDDATE-"].strip()
+
+
+                if start_date == "":
+                    sg.popup("Start Date cannot be empty value")
+                    continue
+
+                if end_date == "":
+                    sg.popup("End Date cannot be empty value")
+                    continue 
+                try:
+                    start_date_obj = datetime.strptime(start_date, "%d-%m-%Y").date()
+                except ValueError:
+                    sg.popup("Start Date must be in format DD-MM-YYYY")
+                    continue
+
+                try:
+                    end_date_obj = datetime.strptime(end_date, "%d-%m-%Y").date()
+                except ValueError:
+                    sg.popup("End Date must be in format DD-MM-YYYY")
+                    continue
+
+                if start_date_obj > end_date_obj:
+                    sg.popup("Start Date cannot be after End Date")
+                    continue
+
+                window.close()
+                return  {    
+                    "start_date": start_date_obj,
+                    "end_date": end_date_obj}
+            
+    def validate_cost(self, cost):
+        if not cost:
+            raise ValueError("Cost is required")
+        try:
+            new_cost = float(cost)
+        except ValueError:
+            raise ValueError("Invalid cost")
+        
+        if new_cost <= 0:
+         raise ValueError("Cost must be greater than 0")
+        
+        return new_cost
+
+    
+    def validate_date(self, date_input):
+        today_date = date.today() #date
+
+        if not date_input: #str
+                    return today_date.strftime("%d-%m-%Y")
+        try:
+            date_obj = datetime.strptime(date_input, "%d-%m-%Y").date()
+        except ValueError:
+            raise ValueError("Invalid Date format (DD-MM-YYYY)")
+        
+        if date_obj > today_date:
+                     raise ValueError("The entered date cannot be greater than today")
+        
+        return date_obj.strftime("%d-%m-%Y")
+    
+    def validate_category(self, category):
+
+        if not category:
+            raise ValueError("You must select a category")
+        return category
+    
+    def validate_description(self, description):
+        try:
+            if description == "":
+                raise ValueError("Description value is required if you want to track a new financial movement")
+ 
+            if not all(word.isalpha() for word in description.split(" ")):
+               raise ValueError("Only letters are allowed")
+            
+        except ValueError:
+            raise ValueError("Invalid Description")
+
+        return description
+    
+    def validate_save_functionality(self,data_handler,actions_handler,file):
+        income_list = data_handler.get_income_list(actions_handler.movement_list)
+        income_value = actions_handler.get_total_income(income_list)
+        expense_list = data_handler.get_expense_list(actions_handler.movement_list)
+        expense_value = actions_handler.get_total_income(expense_list)
+        profit = actions_handler.get_profit_value(income_value,expense_value)
+        data_handler.validate_data(file)
+        new_list = actions_handler.movement_list
+        data_handler.save_movements(file,new_list, str(income_value), str(expense_value), str(profit))
+    
+
+             
+    def ask_for_financial_movement(self,category_list,forced_movement_type=None ):
+        today_date = date.today() #date
+        aux_date = today_date.strftime("%d-%m-%Y") #str
+
+        layout = [
+            [sg.Text('Date: '),sg.InputText(key="-DATE-",default_text=aux_date)], #str
+            [sg.Text('Cost: '), sg.InputText(key="-COST-")],
+            [sg.Text('Category:'), sg.Combo(category_list, key="-CATEGORY-")],
+        ]
+
+        if forced_movement_type is None: 
+            layout.append([sg.Text('Movement Type:'), 
+            sg.Radio("Income", "MOVEMENT", key="-INCOME-", default=True),
+            sg.Radio("Expense", "MOVEMENT", key="-EXPENSE-")])
+        else:
+            layout.append([sg.Text(f"Type: {forced_movement_type}")])
+        
+        layout += [ 
+            [sg.Text('Description: '), sg.InputText(key="-DESCRIPTION-")],
+            [sg.Button("Accept"), sg.Button("Cancel")]]
+        
+
+        window = sg.Window("Financial Movement", layout)
+        
+        while True:
+            event, values = window.read()
+            if event == sg.WIN_CLOSED or event == 'Cancel':
+                window.close()
+                return None
+            
+            if event == "Accept":
+                 
+                 try:
+                        new_date = self.validate_date(values["-DATE-"])
+                        window["-DATE-"].update(new_date)
+                        if not values["-DATE-"]:
+                            sg.popup("Date was empty, using today's date")
+                        new_cost = self.validate_cost(values["-COST-"])
+                        selected_category = self.validate_category(values["-CATEGORY-"])
+
+                        if forced_movement_type:
+                            mv_type = forced_movement_type
+                        else:
+                            if values["-INCOME-"]:
+                                mv_type = "ingreso"
+                            
+                            if  values["-EXPENSE-"]:
+                                mv_type = "gasto"
+                        
+                        desc = self.validate_description(values["-DESCRIPTION-"])
+
+                 except ValueError as e:
+                    sg.popup(str(e))
+                    continue
+                 
+                 window.close()
+                 return {    
+                    "today_date": new_date,
+                    "category_name": selected_category,
+                    "cost": new_cost,
+                    "mv_type": mv_type,
+                    "description": desc
+                }
+       
+    def display_information(self, actions_handler,data_handler,category_handler):               
+        headings = ["today_date", "category", "color", "cost", "mv_type", "description"]
+        file = "./Semana_17/csv/financial_movements.csv"
+
+        movements = data_handler.load_movements(file,category_handler) 
+        for movement in movements:
+            actions_handler.add_movement(movement)
+
+        layout = [
+            [sg.Text("", key="-FILTERINFO-")],
+            [sg.Table(
+                values=actions_handler.create_list(),
+                headings=headings,
+                key="-TABLE-",
+                auto_size_columns=False,
+                col_widths=[15, 20, 10, 10, 10],
+                justification="center",
+                num_rows=10,
+                row_colors=[]
+            )],
+            [sg.Button("Add Movement"),sg.Button("Add Category"),sg.Button("Filter"), 
+             sg.Button("Cancel"),sg.Button("Export to CSV"),sg.Button("Add Income"),sg.Button("Add Expense")],
+        ]
+
+        window = sg.Window("Movements Table", layout,finalize=True)
+
+        row_colors = []
+
+        for i, movement in enumerate(actions_handler.movement_list):
+            row_colors.append((i, "white", movement.category.color))
+
+        window["-TABLE-"].update(row_colors=row_colors)
+
+       
+        while True:
+            event, values = window.read()
+
+            if event == "Export to CSV":
+                self.validate_save_functionality(data_handler,actions_handler,file)
+
+            if event == sg.WIN_CLOSED or event == "Cancel":
+                self.validate_save_functionality(data_handler,actions_handler,file)
+                window.close()
+                return None
+            
+            if event == "Add Category":
+                category_data = self.ask_for_category()
+
+                if category_data is None:
+                    continue
+
+                category_handler.check_category(
+                    category_data["category_name"],
+                    category_data["color"]
+                )   
+            
+            if event == "Filter":
+                filter_data = self.ask_for_dates()
+                
+                if filter_data is None:
+                    break
+
+                start_date = filter_data["start_date"]
+                end_date = filter_data["end_date"]
+
+                filtered_movements = actions_handler.filter_by_date(start_date, end_date)
+
+                window["-TABLE-"].update(values=[
+                    [m.today_date.strftime("%d-%m-%Y"), m.category.category_name, m.category.color, m.cost, m.mv_type, m.description]
+                    for m in filtered_movements])
+                
+                row_colors = []
+                for i, m in enumerate(filtered_movements):
+                    row_colors.append((i, "white", m.category.color))
+
+                window["-TABLE-"].update(row_colors=row_colors)
+                
+                window["-FILTERINFO-"].update(f"Filtered from {start_date} to {end_date}")
+            
+
+            if event in ("Add Movement", "Add Income", "Add Expense"):
+                if not category_handler.category_color:
+                    sg.popup("You must create at least one category first")
+                    continue
+
+                category_list = list(category_handler.category_color.keys())
+
+                if event == "Add Movement":
+                        forced_movement_type = None
+                elif event == "Add Income":
+                        forced_movement_type = "ingreso"
+                else:
+                        forced_movement_type = "gasto"
+                mv_data = self.ask_for_financial_movement(category_list,forced_movement_type)
+
+                if mv_data is None:
+                    continue
+
+                category = category_handler.category_color[mv_data["category_name"]]
+
+                new_movement = Movement(
+                        mv_data["today_date"],
+                        category,
+                        mv_data["cost"],
+                        mv_data["mv_type"],
+                        mv_data["description"]
+                    )
+
+                actions_handler.add_movement(new_movement)
+                    
+                window["-TABLE-"].update(values=actions_handler.create_list())
+
+                row_colors = []
+                for i, movement in enumerate(actions_handler.movement_list):
+                    row_colors.append((i, "white", movement.category.color))
+
+                window["-TABLE-"].update(row_colors=row_colors)
+                  
+        window.close()
+
+
+
+
+
